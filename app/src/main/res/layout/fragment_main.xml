@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity$PlaceholderFragment">
+
+    <com.esri.android.map.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        mapoptions.MapType="Streets"
+        mapoptions.center="60.1691294, 24.9389649"
+        mapoptions.ZoomLevel="16"/>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/floating_action_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        fab:fab_addButtonColorNormal="@color/tt_primary_dark"
+        fab:fab_addButtonColorPressed="@color/tt_accent"
+        fab:fab_addButtonPlusIconColor="@color/tt_window_background"
+        fab:fab_expandDirection="up"
+        fab:fab_labelStyle="@style/menu_labels_style"
+        fab:fab_labelsPosition="left">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_photo_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_title="Photo"
+            fab:fab_colorNormal="@color/tt_primary"
+            fab:fab_colorPressed="@color/tt_accent"
+            fab:fab_icon="@drawable/ic_camera_white"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_note_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_title="Note"
+            fab:fab_colorNormal="@color/tt_primary"
+            fab:fab_colorPressed="@color/tt_accent"
+            fab:fab_icon="@drawable/ic_pencil_white"/>
+
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+</RelativeLayout>

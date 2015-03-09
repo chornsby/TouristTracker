@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tt_primary">#3F51B5</color>
+    <color name="tt_primary_dark">#303F9F</color>
+    <color name="tt_accent">#8C9EFF</color>
+    <color name="tt_window_background">#E8EAF6</color>
+    <color name="black_semi_transparent">#B2000000</color>
+</resources>
