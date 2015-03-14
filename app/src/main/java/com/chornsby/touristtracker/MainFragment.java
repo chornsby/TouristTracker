@@ -1,16 +1,11 @@
 package com.chornsby.touristtracker;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +27,8 @@ import com.google.android.gms.location.LocationServices;
 public class MainFragment extends Fragment
         implements ConnectionCallbacks, OnConnectionFailedListener{
 
+    private static final String LOG_TAG = MainFragment.class.getSimpleName();
+
     private static final int ADD_PHOTO_REQUEST_CODE = 1;
     private static final int ADD_NOTE_REQUEST_CODE = 2;
 
@@ -43,7 +40,7 @@ public class MainFragment extends Fragment
     MapView mMapView;
     FloatingActionButton mAddPhoto;
     FloatingActionButton mAddNote;
-    LocationManager mLocationManager;
+    Intent serviceIntent;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,6 +79,10 @@ public class MainFragment extends Fragment
 
         buildGoogleApiClient();
 
+        serviceIntent = new Intent(getActivity(), TrackerService.class);
+        serviceIntent.setAction(TrackerService.ACTION_RESUME);
+        getActivity().startService(serviceIntent);
+
         return rootView;
     }
 
@@ -96,43 +97,6 @@ public class MainFragment extends Fragment
             Toast.makeText(
                     getActivity(), "Received some text!", Toast.LENGTH_SHORT
             ).show();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        promptToActivateGPS();
-    }
-
-    private void promptToActivateGPS() {
-        mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Location Services Not Active");
-            builder.setMessage("Please enable Location Services and GPS");
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    // Show location settings when the user acknowledges the alert dialog
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-                }
-            });
-            builder.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    getActivity().finish();
-                }
-            });
-            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    getActivity().finish();
-                }
-            });
-            Dialog alertDialog = builder.create();
-            alertDialog.setCanceledOnTouchOutside(false);
-            alertDialog.show();
         }
     }
 
@@ -166,18 +130,19 @@ public class MainFragment extends Fragment
             );
             mMapView.setMapOptions(mapOptions);
         }
-
-        Toast.makeText(getActivity(), "Updated location", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Toast.makeText(getActivity(), "suspended", Toast.LENGTH_SHORT).show();
+        Log.d(LOG_TAG, "GooglePlayServices connection suspended");
+        Log.d(LOG_TAG, "Trying to reconnect");
+
+        // Try to reconnect
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(getActivity(), "failed", Toast.LENGTH_SHORT).show();
+        Log.e(LOG_TAG, "GooglePlayServices connection failed: " + connectionResult.getErrorCode());
     }
 }

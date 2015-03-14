@@ -11,5 +11,12 @@
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
 
+    <string name="notif_text_tracking">Currently tracking your location</string>
+    <string name="notif_text_not_tracking">Location tracking is paused</string>
+
     <string name="content_authority">com.chornsby.touristtracker</string>
+
+    <string name="action_tracking_pause">Pause</string>
+    <string name="action_tracking_resume">Resume</string>
+    <string name="action_tracking_close">Close</string>
 </resources>

@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.location.Location;
 
 import com.chornsby.touristtracker.data.TrackerContract.LocationEntry;
+import com.google.android.gms.location.LocationRequest;
 
 public class Utility {
 
@@ -19,5 +20,13 @@ public class Utility {
         values.put(LocationEntry.COLUMN_SPEED, location.getSpeed());
         values.put(LocationEntry.COLUMN_TIME, location.getTime());
         return values;
+    }
+
+    public static LocationRequest createNewLocationRequest() {
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(15000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        return locationRequest;
     }
 }

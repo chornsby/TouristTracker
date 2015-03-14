@@ -33,6 +33,11 @@
             android:name=".data.TrackerProvider"
             android:exported="false"
             android:syncable="false" />
+
+        <service
+            android:name=".TrackerService"
+            android:label="Location tracking"
+            android:exported="false" />
     </application>
 
 </manifest>
