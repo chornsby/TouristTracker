@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.chornsby.touristtracker.data.TrackerContract;
 import com.google.android.gms.common.ConnectionResult;
@@ -62,13 +61,15 @@ public class TrackerService extends Service implements
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // Sanity checks
+        // Fail silently
         if (intent == null) {
-            throw new IllegalStateException("Null Intent passed to onStartCommand");
+            Log.w(LOG_TAG, "Null Intent passed to onStartCommand");
+            return START_STICKY;
         }
 
         if (intent.getAction() == null) {
-            throw new IllegalStateException("Null Action passed to onStartCommand");
+            Log.w(LOG_TAG, "Null Action passed to onStartCommand");
+            return START_STICKY;
         }
 
         switch (intent.getAction()) {
@@ -112,38 +113,44 @@ public class TrackerService extends Service implements
     private Notification getNotification() {
         // Build the Notification for the foreground Service
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_notif_map)
+                .setColor(getResources().getColor(R.color.tt_primary))
+                .setSmallIcon(R.drawable.ic_action_my_location)
                 .setContentTitle(getText(R.string.app_name));
 
         if (mIsTracking) {
             builder.setContentText(getText(R.string.notif_text_tracking))
                    .addAction(
-                           R.drawable.ic_notif_pause,
+                           R.drawable.ic_action_location_off,
                            getString(R.string.action_tracking_pause),
-                           getPendingIntent(ACTION_PAUSE)
+                           getServicePendingIntent(ACTION_PAUSE)
                    );
         } else {
             builder.setContentText(getText(R.string.notif_text_not_tracking))
                    .addAction(
-                           R.drawable.ic_notif_record,
+                           R.drawable.ic_action_location_on,
                            getString(R.string.action_tracking_resume),
-                           getPendingIntent(ACTION_RESUME)
+                           getServicePendingIntent(ACTION_RESUME)
                    );
         }
 
         builder.addAction(
-                R.drawable.ic_notif_close,
+                R.drawable.ic_action_close,
                 getString(R.string.action_tracking_close),
-                getPendingIntent(ACTION_CLOSE)
+                getServicePendingIntent(ACTION_CLOSE)
         );
+
+        builder.setContentIntent(getActivityPendingIntent());
 
         return builder.build();
     }
 
-    private PendingIntent getPendingIntent(String action) {
-        // Build base Intent
+    private PendingIntent getActivityPendingIntent() {
+        Intent intent = new Intent(this, MainActivity.class);
+        return PendingIntent.getActivity(this, 0, intent, 0);
+    }
+
+    private PendingIntent getServicePendingIntent(String action) {
         Intent intent = new Intent(this, TrackerService.class).setAction(action);
-        // Convert to PendingIntent and return
         return PendingIntent.getService(this, 0, intent, 0);
     }
 
@@ -153,10 +160,6 @@ public class TrackerService extends Service implements
         ContentValues locationValues = Utility.getContentValuesFromLocation(location);
         getContentResolver().insert(TrackerContract.LocationEntry.CONTENT_URI, locationValues);
         getContentResolver().notifyChange(TrackerContract.BASE_CONTENT_URI, null);
-
-        // Also log to the screen
-        Log.i(LOG_TAG, location.toString());
-        Toast.makeText(this, location.toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -177,7 +180,7 @@ public class TrackerService extends Service implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e(LOG_TAG, "GooglePlayServices connection failed: " + connectionResult.getErrorCode());
+        Log.d(LOG_TAG, "GooglePlayServices connection failed: " + connectionResult.getErrorCode());
     }
 
     @Override
