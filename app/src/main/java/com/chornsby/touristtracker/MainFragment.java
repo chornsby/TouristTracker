@@ -1,49 +1,38 @@
 package com.chornsby.touristtracker;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationManager;
+import android.database.ContentObserver;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.esri.android.map.MapOptions;
+import com.chornsby.touristtracker.data.TrackerContract;
 import com.esri.android.map.MapView;
 import com.esri.android.map.event.OnStatusChangedListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationServices;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainFragment extends Fragment
-        implements ConnectionCallbacks, OnConnectionFailedListener{
+public class MainFragment extends Fragment {
+
+    private static final String LOG_TAG = MainFragment.class.getSimpleName();
 
     private static final int ADD_PHOTO_REQUEST_CODE = 1;
     private static final int ADD_NOTE_REQUEST_CODE = 2;
 
+    private MapView mMapView;
+    private LocationObserver mLocationObserver;
+
     public MainFragment() {
     }
-
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    MapView mMapView;
-    FloatingActionButton mAddPhoto;
-    FloatingActionButton mAddNote;
-    LocationManager mLocationManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,13 +46,20 @@ public class MainFragment extends Fragment
             @Override
             public void onStatusChanged(Object source, STATUS status) {
                 if (OnStatusChangedListener.STATUS.INITIALIZED == status && source == mMapView) {
-                    mGoogleApiClient.connect();
+                    // TODO: Fix bug where `centerMapAtLatestLocation` is called twice
+                    centerMapAtLatestLocation();
+                    mLocationObserver = new LocationObserver(null);
+                    getActivity().getContentResolver().registerContentObserver(
+                            TrackerContract.LocationEntry.CONTENT_URI,
+                            true,
+                            mLocationObserver
+                    );
                 }
             }
         });
 
-        mAddPhoto = (FloatingActionButton) rootView.findViewById(R.id.add_photo_fab);
-        mAddPhoto.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton addPhoto = (FloatingActionButton) rootView.findViewById(R.id.add_photo_fab);
+        addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -71,8 +67,8 @@ public class MainFragment extends Fragment
             }
         });
 
-        mAddNote = (FloatingActionButton) rootView.findViewById(R.id.add_note_fab);
-        mAddNote.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton addNote = (FloatingActionButton) rootView.findViewById(R.id.add_note_fab);
+        addNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(), "Currently not implemented.", Toast.LENGTH_SHORT)
@@ -80,9 +76,17 @@ public class MainFragment extends Fragment
             }
         });
 
-        buildGoogleApiClient();
+        Intent intent = new Intent(getActivity(), TrackerService.class);
+        intent.setAction(TrackerService.ACTION_RESUME);
+        getActivity().startService(intent);
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getActivity().getContentResolver().unregisterContentObserver(mLocationObserver);
     }
 
     @Override
@@ -99,85 +103,43 @@ public class MainFragment extends Fragment
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        promptToActivateGPS();
-    }
+    private void centerMapAtLatestLocation() {
+        // Retrieve relevant records from the database
+        Uri uri = TrackerContract.LocationEntry.CONTENT_URI;
+        String[] projection = {
+                TrackerContract.LocationEntry.COLUMN_LATITUDE,
+                TrackerContract.LocationEntry.COLUMN_LONGITUDE,
+        };
 
-    private void promptToActivateGPS() {
-        mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("Location Services Not Active");
-            builder.setMessage("Please enable Location Services and GPS");
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    // Show location settings when the user acknowledges the alert dialog
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-                }
-            });
-            builder.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    getActivity().finish();
-                }
-            });
-            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    getActivity().finish();
-                }
-            });
-            Dialog alertDialog = builder.create();
-            alertDialog.setCanceledOnTouchOutside(false);
-            alertDialog.show();
+        Cursor c = getActivity().getContentResolver().query(
+                uri,
+                projection,
+                null,
+                null,
+                null
+        );
+        if (c.moveToLast()) {
+            double latitude = c.getDouble(c.getColumnIndex(TrackerContract.LocationEntry.COLUMN_LATITUDE));
+            double longitude = c.getDouble(c.getColumnIndex(TrackerContract.LocationEntry.COLUMN_LONGITUDE));
+            mMapView.centerAt(latitude, longitude, true);
         }
+        c.close();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-    }
+    private class LocationObserver extends ContentObserver {
 
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-        if (mLastLocation != null) {
-            MapOptions mapOptions = new MapOptions(
-                    MapOptions.MapType.STREETS,
-                    mLastLocation.getLatitude(),
-                    mLastLocation.getLongitude(),
-                    18
-            );
-            mMapView.setMapOptions(mapOptions);
+        /**
+         * Creates a content observer.
+         *
+         * @param handler The handler to run {@link #onChange} on, or null if none.
+         */
+        public LocationObserver(Handler handler) {
+            super(handler);
         }
 
-        Toast.makeText(getActivity(), "Updated location", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Toast.makeText(getActivity(), "suspended", Toast.LENGTH_SHORT).show();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Toast.makeText(getActivity(), "failed", Toast.LENGTH_SHORT).show();
+        @Override
+        public void onChange(boolean selfChange) {
+            centerMapAtLatestLocation();
+        }
     }
 }

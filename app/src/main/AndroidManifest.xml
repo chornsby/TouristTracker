@@ -2,8 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chornsby.touristtracker" >
 
+    <permission android:name="com.chornsby.touristtracker.ACCESS_TRACKED_LOCATION" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.chornsby.touristtracker.ACCESS_TRACKED_LOCATION" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -31,8 +34,14 @@
         <provider
             android:authorities="@string/content_authority"
             android:name=".data.TrackerProvider"
-            android:exported="false"
-            android:syncable="false" />
+            android:exported="true"
+            android:syncable="false"
+            android:permission="com.chornsby.touristtracker.ACCESS_TRACKED_LOCATION"/>
+
+        <service
+            android:name=".TrackerService"
+            android:label="Location tracking"
+            android:exported="false" />
     </application>
 
 </manifest>
