@@ -86,7 +86,9 @@ public class MainFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        getActivity().getContentResolver().unregisterContentObserver(mLocationObserver);
+        if (mLocationObserver != null) {
+            getActivity().getContentResolver().unregisterContentObserver(mLocationObserver);
+        }
     }
 
     @Override
