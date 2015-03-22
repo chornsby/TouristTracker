@@ -16,6 +16,9 @@
 
     <string name="content_authority">com.chornsby.touristtracker</string>
 
+    <string name="shared_preferences_key">com.chornsby.touristtracker.SHARED_PREFERENCES</string>
+    <string name="is_tracking_preference_key">is_tracking</string>
+
     <string name="action_tracking_pause">Pause</string>
     <string name="action_tracking_resume">Resume</string>
     <string name="action_tracking_close">Close</string>

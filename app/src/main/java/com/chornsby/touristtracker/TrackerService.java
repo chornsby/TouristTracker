@@ -61,30 +61,39 @@ public class TrackerService extends Service implements
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // Fail silently
-        if (intent == null) {
-            Log.w(LOG_TAG, "Null Intent passed to onStartCommand");
-            return START_STICKY;
+        // Get the action for this command either from the Intent or SharedPreferences
+        String action;
+
+        if (intent == null || intent.getAction() == null) {
+            boolean isTracking = Utility.getIsTracking(this);
+
+            if (isTracking) {
+                action = ACTION_RESUME;
+            } else {
+                action = ACTION_PAUSE;
+            }
+
+        } else {
+            action = intent.getAction();
         }
 
-        if (intent.getAction() == null) {
-            Log.w(LOG_TAG, "Null Action passed to onStartCommand");
-            return START_STICKY;
-        }
-
-        switch (intent.getAction()) {
+        // Perform given action and update SharedPreferences
+        switch (action) {
             case ACTION_RESUME:
                 mIsTracking = true;
+                Utility.setIsTracking(this, true);
                 resumeTracking();
                 break;
             case ACTION_PAUSE:
                 mIsTracking = false;
+                Utility.setIsTracking(this, false);
                 pauseTracking();
                 break;
             case ACTION_CLOSE:
                 mIsTracking = false;
+                Utility.setIsTracking(this, false);
                 stopSelf();
-                break;
+                return START_NOT_STICKY;
             default:
                 throw new IllegalArgumentException("Unknown action: " + intent.getAction());
         }

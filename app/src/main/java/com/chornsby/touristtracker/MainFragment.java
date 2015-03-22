@@ -76,8 +76,8 @@ public class MainFragment extends Fragment {
             }
         });
 
+        // Start Service without defined action in order to respect SharedPreferences
         Intent intent = new Intent(getActivity(), TrackerService.class);
-        intent.setAction(TrackerService.ACTION_RESUME);
         getActivity().startService(intent);
 
         return rootView;
