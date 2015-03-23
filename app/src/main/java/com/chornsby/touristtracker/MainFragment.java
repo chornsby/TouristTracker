@@ -14,8 +14,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.chornsby.touristtracker.data.TrackerContract;
+import com.esri.android.map.GraphicsLayer;
 import com.esri.android.map.MapView;
 import com.esri.android.map.event.OnStatusChangedListener;
+import com.esri.core.geometry.GeometryEngine;
+import com.esri.core.geometry.Point;
+import com.esri.core.geometry.Polyline;
+import com.esri.core.map.Graphic;
+import com.esri.core.symbol.SimpleLineSymbol;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 /**
@@ -111,21 +117,61 @@ public class MainFragment extends Fragment {
         String[] projection = {
                 TrackerContract.LocationEntry.COLUMN_LATITUDE,
                 TrackerContract.LocationEntry.COLUMN_LONGITUDE,
+                TrackerContract.LocationEntry.COLUMN_ACCURACY,
         };
+
+        // Select only Location entries that are accurate to within 30m
+        String selection = TrackerContract.LocationEntry.COLUMN_ACCURACY + " < ?";
+        String[] selectionArgs = {"30"};
 
         Cursor c = getActivity().getContentResolver().query(
                 uri,
                 projection,
-                null,
-                null,
+                selection,
+                selectionArgs,
                 null
         );
+
+        final int LATITUDE_INDEX = c.getColumnIndex(TrackerContract.LocationEntry.COLUMN_LATITUDE);
+        final int LONGITUDE_INDEX = c.getColumnIndex(TrackerContract.LocationEntry.COLUMN_LONGITUDE);
+
+        // Only add GraphicsLayer if there are any stored Location entries to add
         if (c.moveToLast()) {
-            double latitude = c.getDouble(c.getColumnIndex(TrackerContract.LocationEntry.COLUMN_LATITUDE));
-            double longitude = c.getDouble(c.getColumnIndex(TrackerContract.LocationEntry.COLUMN_LONGITUDE));
+            double latitude = c.getDouble(LATITUDE_INDEX);
+            double longitude = c.getDouble(LONGITUDE_INDEX);
             mMapView.centerAt(latitude, longitude, true);
+
+            // Create graphics layer for tracked route
+            GraphicsLayer graphicsLayer = new GraphicsLayer();
+            SimpleLineSymbol simpleLineSymbol = new SimpleLineSymbol(
+                    getResources().getColor(R.color.tt_secondary),
+                    4,
+                    SimpleLineSymbol.STYLE.SOLID
+            );
+
+            // Begin at the most recent location
+            Polyline lineGeometry = new Polyline();
+            lineGeometry.startPath(getPointFromLatLong(latitude, longitude));
+
+            // Iterate backwards through all previous locations to extend the line
+            while (c.moveToPrevious()) {
+                latitude = c.getDouble(LATITUDE_INDEX);
+                longitude = c.getDouble(LONGITUDE_INDEX);
+
+                lineGeometry.lineTo(getPointFromLatLong(latitude, longitude));
+            }
+
+            // Create and add the Graphic to the MapView
+            Graphic lineGraphic = new Graphic(lineGeometry, simpleLineSymbol);
+            graphicsLayer.addGraphic(lineGraphic);
+
+            mMapView.addLayer(graphicsLayer);
         }
         c.close();
+    }
+
+    private Point getPointFromLatLong(double latitude, double longitude) {
+        return GeometryEngine.project(longitude, latitude, mMapView.getSpatialReference());
     }
 
     private class LocationObserver extends ContentObserver {
