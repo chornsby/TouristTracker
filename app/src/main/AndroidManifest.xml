@@ -39,9 +39,17 @@
             android:permission="com.chornsby.touristtracker.ACCESS_TRACKED_LOCATION"/>
 
         <service
-            android:name=".TrackerService"
-            android:label="Location tracking"
-            android:exported="false" />
+            android:name=".LocationService"
+            android:enabled="true"
+            android:exported="false"
+            android:label="Location tracking" />
+
+        <receiver
+            android:name=".LocationReceiver"
+            android:enabled="true"
+            android:exported="false" >
+        </receiver>
+
     </application>
 
 </manifest>
