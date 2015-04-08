@@ -2,6 +2,7 @@ package com.chornsby.touristtracker;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,17 +15,22 @@ import android.widget.Toast;
 import com.chornsby.touristtracker.data.TrackerContract;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
+import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
+import org.mapsforge.map.layer.Layers;
 import org.mapsforge.map.layer.cache.TileCache;
+import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.reader.MapDataStore;
 import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
 
 import java.io.File;
+
+//import android.graphics.Bitmap;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -94,7 +100,6 @@ public class MainFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        centerMapAtLatestLocation();
         mMapView.getModel().mapViewPosition.setZoomLevel((byte) 16);
 
         File mapFile = Utility.getMapFile(getActivity());
@@ -113,6 +118,8 @@ public class MainFragment extends Fragment {
         mTileRendererLayer.setXmlRenderTheme(InternalRenderTheme.OSMARENDER);
 
         mMapView.getLayerManager().getLayers().add(mTileRendererLayer);
+
+        centerMapAtLatestLocation();
     }
 
     @Override
@@ -145,7 +152,7 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void centerMapAtLatestLocation() {
+    private LatLong getLatestLatLong() {
         // Retrieve relevant records from the database
         Uri uri = TrackerContract.LocationEntry.CONTENT_URI;
         String[] projection = {
@@ -169,13 +176,36 @@ public class MainFragment extends Fragment {
         final int LATITUDE_INDEX = c.getColumnIndex(TrackerContract.LocationEntry.COLUMN_LATITUDE);
         final int LONGITUDE_INDEX = c.getColumnIndex(TrackerContract.LocationEntry.COLUMN_LONGITUDE);
 
+        LatLong latLong = null;
+
         if (c.moveToLast()) {
             double latitude = c.getDouble(LATITUDE_INDEX);
             double longitude = c.getDouble(LONGITUDE_INDEX);
 
-            mMapView.getModel().mapViewPosition.setCenter(new LatLong(latitude, longitude));
+            latLong = new LatLong(latitude, longitude);
         }
 
         c.close();
+
+        return latLong;
+    }
+
+    private void centerMapAtLatestLocation() {
+        LatLong latLong = getLatestLatLong();
+        mMapView.getModel().mapViewPosition.setCenter(latLong);
+
+        Drawable drawable = getActivity().getResources().getDrawable(R.drawable.ic_action_close_red);
+
+        if (drawable == null) return;
+
+        Bitmap marker = AndroidGraphicFactory.convertToBitmap(drawable);
+
+        Layers layers = mMapView.getLayerManager().getLayers();
+        layers.add(new Marker(
+                latLong,
+                marker,
+                0,
+                -marker.getHeight() / 2
+        ));
     }
 }
