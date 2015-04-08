@@ -22,4 +22,6 @@
     <string name="action_tracking_pause">Pause</string>
     <string name="action_tracking_resume">Resume</string>
     <string name="action_tracking_close">Close</string>
+
+    <string name="map_file_name">helsinki.map</string>
 </resources>

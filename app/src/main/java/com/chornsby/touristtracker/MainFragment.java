@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -66,8 +65,6 @@ public class MainFragment extends Fragment {
                 mMapView.getModel().frameBufferModel.getOverdrawFactor()
         );
 
-        Toast.makeText(getActivity(), mMapView.getDimension().toString(), Toast.LENGTH_SHORT).show();
-
         FloatingActionButton addPhoto = (FloatingActionButton) rootView.findViewById(R.id.add_photo_fab);
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,8 +97,9 @@ public class MainFragment extends Fragment {
         centerMapAtLatestLocation();
         mMapView.getModel().mapViewPosition.setZoomLevel((byte) 16);
 
-        // TODO: Pre-install this file
-        File mapFile = new File(Environment.getExternalStorageDirectory(), "finland.map");
+        File mapFile = Utility.getMapFile(getActivity());
+        if (mapFile == null) return;
+
         MapDataStore mapDataStore = new MapFile(mapFile);
 
         mTileRendererLayer = new TileRendererLayer(
