@@ -1,0 +1,1 @@
+[![Build Status](https://travis-ci.org/chornsby/TouristTracker.svg)](https://travis-ci.org/chornsby/TouristTracker)
