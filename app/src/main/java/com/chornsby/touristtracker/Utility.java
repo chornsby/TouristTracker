@@ -3,8 +3,10 @@ package com.chornsby.touristtracker;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.chornsby.touristtracker.data.TrackerContract.LocationEntry;
@@ -91,5 +93,11 @@ public class Utility {
 
         in.close();
         out.close();
+    }
+
+    public static boolean isTracking(Context context) {
+        String TRACKING_PREFERENCE_KEY = context.getString(R.string.pref_track_location);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getBoolean(TRACKING_PREFERENCE_KEY, true);
     }
 }

@@ -30,8 +30,6 @@ import org.mapsforge.map.rendertheme.InternalRenderTheme;
 
 import java.io.File;
 
-//import android.graphics.Bitmap;
-
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -89,9 +87,11 @@ public class MainFragment extends Fragment {
             }
         });
 
-        // Start Service without defined action in order to respect SharedPreferences
-        Intent intent = new Intent(getActivity(), LocationService.class);
-        getActivity().startService(intent);
+        if (Utility.isTracking(getActivity())) {
+            // Start Service without defined action in order to respect SharedPreferences
+            Intent intent = new Intent(getActivity(), LocationService.class);
+            getActivity().startService(intent);
+        }
 
         return rootView;
     }
@@ -161,29 +161,33 @@ public class MainFragment extends Fragment {
                 TrackerContract.LocationEntry.COLUMN_ACCURACY,
         };
 
-        // Select only Location entries that are accurate to within 30m
-        String selection = TrackerContract.LocationEntry.COLUMN_ACCURACY + " < ?";
-        String[] selectionArgs = {"30"};
-
         Cursor c = getActivity().getContentResolver().query(
                 uri,
                 projection,
-                selection,
-                selectionArgs,
+                null,
+                null,
                 null
         );
 
         final int LATITUDE_INDEX = c.getColumnIndex(TrackerContract.LocationEntry.COLUMN_LATITUDE);
         final int LONGITUDE_INDEX = c.getColumnIndex(TrackerContract.LocationEntry.COLUMN_LONGITUDE);
 
-        LatLong latLong = null;
+        LatLong latLong;
+        double latitude;
+        double longitude;
 
+        // Use latest stored data
         if (c.moveToLast()) {
-            double latitude = c.getDouble(LATITUDE_INDEX);
-            double longitude = c.getDouble(LONGITUDE_INDEX);
+            latitude = c.getDouble(LATITUDE_INDEX);
+            longitude = c.getDouble(LONGITUDE_INDEX);
 
-            latLong = new LatLong(latitude, longitude);
+        // Or the coordinates for Helsinki
+        } else {
+            latitude = 60.1708;
+            longitude = 24.9375;
         }
+
+        latLong = new LatLong(latitude, longitude);
 
         c.close();
 

@@ -4,10 +4,11 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -24,7 +25,7 @@ public class LocationService extends Service implements
     private PendingIntent mLocationIntent;
     private static final int REQUEST_CODE = 42;
     private static final int FOREGROUND_ID = 42;
-    private static final String ACTION_CLOSE = "stop";
+    public static final String ACTION_CLOSE = "stop";
 
     public LocationService() {
     }
@@ -62,6 +63,7 @@ public class LocationService extends Service implements
         String action = intent.getAction();
 
         if (action != null && action.equals(ACTION_CLOSE)) {
+            setIsTracking(false);
             stopSelf();
             return START_NOT_STICKY;
         }
@@ -69,6 +71,8 @@ public class LocationService extends Service implements
         if (!mGoogleApiClient.isConnected()) {
             mGoogleApiClient.connect();
         }
+
+        setIsTracking(true);
 
         startForeground(FOREGROUND_ID, getNotification());
 
@@ -124,12 +128,16 @@ public class LocationService extends Service implements
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d(LOG_TAG, "Connection to GoogleApiClient failed: " + connectionResult.getErrorCode());
-    }
+    public void onConnectionFailed(ConnectionResult connectionResult) {}
 
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    private void setIsTracking(boolean isTracking) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putBoolean(getString(R.string.pref_track_location), isTracking);
+        editor.apply();
     }
 }

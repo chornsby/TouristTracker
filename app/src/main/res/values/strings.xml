@@ -24,4 +24,7 @@
     <string name="action_tracking_close">Close</string>
 
     <string name="map_file_name">helsinki.map</string>
+    <string name="pref_track_location">pref_track</string>
+
+    <string name="action_toggle_tracking">Toggle location tracking</string>
 </resources>
