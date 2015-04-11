@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.chornsby.touristtracker"
-        minSdkVersion 16
+        minSdkVersion 10
         targetSdkVersion 22
         versionCode 5
         versionName "0.0.5"
@@ -30,7 +30,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.google.android.gms:play-services:7.0.0'
-    compile 'com.getbase:floatingactionbutton:1.8.0'
+    compile 'net.i2p.android.ext:floatingactionbutton:1.9.0'
     compile 'org.mapsforge:mapsforge-core:0.5.1'
     compile 'org.mapsforge:mapsforge-map:0.5.1'
     compile 'org.mapsforge:mapsforge-map-android:0.5.1'

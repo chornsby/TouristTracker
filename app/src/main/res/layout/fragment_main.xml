@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
+    <net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/floating_action_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
         fab:fab_labelStyle="@style/menu_labels_style"
         fab:fab_labelsPosition="left">
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
+        <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_photo_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
             fab:fab_colorPressed="@color/tt_primary_accent"
             fab:fab_icon="@drawable/ic_action_camera"/>
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
+        <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_note_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,6 +45,6 @@
             fab:fab_colorPressed="@color/tt_primary_accent"
             fab:fab_icon="@drawable/ic_action_pencil"/>
 
-        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+        </net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu>
 
 </RelativeLayout>
