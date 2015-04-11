@@ -30,6 +30,5 @@ public class LocationReceiver extends BroadcastReceiver {
 
         // Store Location data in the database
         contentResolver.insert(TrackerContract.LocationEntry.CONTENT_URI, locationValues);
-        contentResolver.notifyChange(TrackerContract.BASE_CONTENT_URI, null);
     }
 }
