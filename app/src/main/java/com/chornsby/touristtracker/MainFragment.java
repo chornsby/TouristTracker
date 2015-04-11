@@ -1,10 +1,12 @@
 package com.chornsby.touristtracker;
 
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -43,6 +45,8 @@ public class MainFragment extends Fragment {
     private MapView mMapView;
     private TileCache mTileCache;
     private TileRendererLayer mTileRendererLayer;
+
+    private LocationObserver mLocationObserver;
 
     public MainFragment() {
     }
@@ -120,6 +124,26 @@ public class MainFragment extends Fragment {
         mMapView.getLayerManager().getLayers().add(mTileRendererLayer);
 
         centerMapAtLatestLocation();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        mLocationObserver = new LocationObserver(new Handler());
+
+        getActivity().getContentResolver().registerContentObserver(
+                TrackerContract.BASE_CONTENT_URI, true, mLocationObserver
+        );
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        getActivity().getContentResolver().unregisterContentObserver(mLocationObserver);
+
+        mLocationObserver = null;
     }
 
     @Override
@@ -205,11 +229,31 @@ public class MainFragment extends Fragment {
         Bitmap marker = AndroidGraphicFactory.convertToBitmap(drawable);
 
         Layers layers = mMapView.getLayerManager().getLayers();
+
+        // Remove the marker if it has already been placed
+        if (layers.size() == 2) {
+            layers.remove(1);
+        }
+
         layers.add(new Marker(
                 latLong,
                 marker,
                 0,
                 -marker.getHeight() / 2
         ));
+    }
+
+    private class LocationObserver extends ContentObserver {
+
+        public LocationObserver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+
+            centerMapAtLatestLocation();
+        }
     }
 }
