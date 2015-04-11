@@ -15,7 +15,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.chornsby.touristtracker.data.TrackerContract;
-import com.getbase.floatingactionbutton.FloatingActionButton;
+
+import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.model.LatLong;
