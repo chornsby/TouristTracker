@@ -2,7 +2,8 @@
     <!-- Untranslatable resources -->
     <string name="content_authority" translatable="false">com.chornsby.touristtracker</string>
     <string name="map_file_name" translatable="false">helsinki.map</string>
-    <string name="pref_track_location">pref_track</string>
+    <string name="photo_subdirectory_path" translatable="false">/tourist_tracker</string>
+    <string name="pref_track_location" translatable="false">pref_track</string>
 
     <!-- Permission details -->
     <string name="permission_track_location_label">tracked location</string>
@@ -23,5 +24,10 @@
     <string name="action_toggle_tracking">Toggle location tracking</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+
+    <!-- Camera -->
+    <string name="label_add_photo">Photo</string>
+    <string name="photo_saved">Photo saved</string>
+    <string name="error_camera_access">Something went wrong accessing the camera</string>
 
 </resources>

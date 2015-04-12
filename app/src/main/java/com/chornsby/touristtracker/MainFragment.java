@@ -1,5 +1,6 @@
 package com.chornsby.touristtracker;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -32,6 +33,10 @@ import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
 
 import java.io.File;
+import java.io.IOException;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -40,14 +45,16 @@ public class MainFragment extends Fragment {
 
     private static final String LOG_TAG = MainFragment.class.getSimpleName();
 
-    private static final int ADD_PHOTO_REQUEST_CODE = 1;
-    private static final int ADD_NOTE_REQUEST_CODE = 2;
+    private static final int REQUEST_TAKE_PHOTO = 1;
+    private static final int REQUEST_TAKE_NOTE = 2;
 
     private MapView mMapView;
     private TileCache mTileCache;
     private TileRendererLayer mTileRendererLayer;
 
     private LocationObserver mLocationObserver;
+
+    private Uri mCurrentPhotoUri;
 
     public MainFragment() {
     }
@@ -79,7 +86,18 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, ADD_PHOTO_REQUEST_CODE);
+                File photoFile;
+                try {
+                    photoFile = Utility.createImageFile(getActivity());
+                } catch (IOException e) {
+                    Crouton.makeText(
+                            getActivity(), R.string.error_camera_access, Style.ALERT
+                    );
+                    return;
+                }
+                mCurrentPhotoUri = Uri.fromFile(photoFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mCurrentPhotoUri);
+                startActivityForResult(intent, REQUEST_TAKE_PHOTO);
             }
         });
 
@@ -166,13 +184,10 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_PHOTO_REQUEST_CODE) {
-            Toast.makeText(
-                    getActivity(), "Returned from the camera app.", Toast.LENGTH_SHORT
-            ).show();
-        } else if (requestCode == ADD_NOTE_REQUEST_CODE) {
-            Toast.makeText(
-                    getActivity(), "Received some text!", Toast.LENGTH_SHORT
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
+            Utility.addToGallery(getActivity(), mCurrentPhotoUri);
+            Crouton.makeText(
+                    getActivity(), R.string.photo_saved, Style.CONFIRM
             ).show();
         }
     }

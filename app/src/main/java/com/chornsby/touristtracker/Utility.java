@@ -3,8 +3,10 @@ package com.chornsby.touristtracker;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -17,6 +19,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class Utility {
 
@@ -99,5 +104,25 @@ public class Utility {
         String TRACKING_PREFERENCE_KEY = context.getString(R.string.pref_track_location);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getBoolean(TRACKING_PREFERENCE_KEY, true);
+    }
+
+    public static File createImageFile(Context context) throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(new Date());
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES + context.getString(R.string.photo_subdirectory_path)
+        );
+
+        // Check if the directory was created or already exists
+        if (storageDir.mkdirs() || storageDir.isDirectory()) {
+            return File.createTempFile(timeStamp, ".jpg", storageDir);
+        } else {
+            throw new IOException("Problem creating an image file on external storage.");
+        }
+    }
+
+    public static void addToGallery(Context context, Uri photoUri) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        mediaScanIntent.setData(photoUri);
+        context.sendBroadcast(mediaScanIntent);
     }
 }
