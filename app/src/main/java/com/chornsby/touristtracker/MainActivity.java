@@ -149,6 +149,10 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
             // Add Action if toggling should stop tracking
             if (Utility.isTracking(this)) {
                 intent.setAction(LocationService.ACTION_CLOSE);
+            // And request best Location accuracy if toggling starts tracking
+            } else {
+                LocationSettingsHelper settingsHelper = new LocationSettingsHelper(this);
+                settingsHelper.checkSettings();
             }
 
             startService(intent);
