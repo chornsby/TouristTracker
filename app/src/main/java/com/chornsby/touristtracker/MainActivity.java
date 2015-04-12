@@ -2,11 +2,18 @@ package com.chornsby.touristtracker;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -15,6 +22,11 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 public class MainActivity extends ActionBarActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private MenuItem mLocationToggle;
+    private ListView mDrawerList;
+
+    private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout mDrawerLayout;
+    private ArrayAdapter<String> mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +41,73 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
                     .add(R.id.container, new MainFragment())
                     .commit();
         }
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        mDrawerList = (ListView) findViewById(R.id.nav_list);
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Crouton.cancelAllCroutons();
+                Crouton.makeText(MainActivity.this, "Functionality coming soon...", Style.INFO).show();
+            }
+        });
+
+        setupDrawer();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    private void addDrawerItems() {
+        String[] navigationArray = {
+                "Review your journey",
+                "Answer surveys",
+                "Submit data",
+                "Settings",
+                "Help",
+        };
+        mAdapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_list_item_1,
+                navigationArray
+        );
+        mDrawerList.setAdapter(mAdapter);
+    }
+
+    private void setupDrawer() {
+        addDrawerItems();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open,
+                R.string.drawer_close) {
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                invalidateOptionsMenu();
+            }
+        };
+
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
     @Override
@@ -74,6 +153,10 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
 
             startService(intent);
 
+            return true;
+        }
+
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
 

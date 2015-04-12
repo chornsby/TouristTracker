@@ -27,4 +27,7 @@
     <string name="pref_track_location">pref_track</string>
 
     <string name="action_toggle_tracking">Toggle location tracking</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 </resources>
