@@ -90,7 +90,7 @@ public class LocationService extends Service implements
 
         builder.addAction(
                 R.drawable.ic_action_close,
-                getString(R.string.action_tracking_close),
+                getString(R.string.action_stop_tracking),
                 getServicePendingIntent(ACTION_CLOSE)
         );
 

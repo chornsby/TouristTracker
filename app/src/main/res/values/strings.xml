@@ -1,39 +1,27 @@
 <resources>
-    <string name="app_name">TouristTracker</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_temp1">temp1</string>
-
-
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
-
-    <string name="notif_text_tracking">Currently tracking your location</string>
-    <string name="notif_text_not_tracking">Location tracking is paused</string>
-
-    <string name="content_authority">com.chornsby.touristtracker</string>
-
-    <string name="shared_preferences_key">com.chornsby.touristtracker.SHARED_PREFERENCES</string>
-    <string name="is_tracking_preference_key">is_tracking</string>
-
-    <string name="action_tracking_pause">Pause</string>
-    <string name="action_tracking_resume">Resume</string>
-    <string name="action_tracking_close">Close</string>
-
-    <string name="map_file_name">helsinki.map</string>
+    <!-- Untranslatable resources -->
+    <string name="content_authority" translatable="false">com.chornsby.touristtracker</string>
+    <string name="map_file_name" translatable="false">helsinki.map</string>
     <string name="pref_track_location">pref_track</string>
 
-    <string name="action_toggle_tracking">Toggle location tracking</string>
-
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-
+    <!-- Permission details -->
     <string name="permission_track_location_label">tracked location</string>
     <string name="permission_track_location_description">
         Allows the app to track your location once every 15 seconds and store that information
         securely on your Android device.
     </string>
+
+    <!-- Titles -->
+    <string name="app_name">Tourist Tracker</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Notifications -->
+    <string name="notif_text_tracking">Currently tracking your location</string>
+
+    <!-- Actions -->
+    <string name="action_stop_tracking">Stop tracking</string>
+    <string name="action_toggle_tracking">Toggle location tracking</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
 </resources>
