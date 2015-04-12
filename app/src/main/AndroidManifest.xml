@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chornsby.touristtracker" >
 
-    <permission android:name="com.chornsby.touristtracker.ACCESS_TRACKED_LOCATION" />
+    <permission
+        android:name="com.chornsby.touristtracker.ACCESS_TRACKED_LOCATION"
+        android:label="@string/permission_track_location_label"
+        android:description="@string/permission_track_location_description"
+        android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
