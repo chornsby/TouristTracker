@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import org.mapsforge.map.layer.Layers;
 import org.mapsforge.map.layer.cache.TileCache;
 import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
+import org.mapsforge.map.model.MapViewPosition;
 import org.mapsforge.map.reader.MapDataStore;
 import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
@@ -60,11 +62,17 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         // Initialise the GraphicsFactory for Mapsforge
         AndroidGraphicFactory.createInstance(getActivity().getApplication());
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.d(LOG_TAG, "onCreateView");
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -73,6 +81,10 @@ public class MainFragment extends Fragment {
         mMapView.setBuiltInZoomControls(false);
         mMapView.getMapScaleBar().setVisible(true);
 
+        MapViewPosition mapViewPosition = mMapView.getModel().mapViewPosition;
+
+        mapViewPosition.setZoomLevel((byte) 16);
+
         mTileCache = AndroidUtil.createTileCache(
                 getActivity(),
                 "mapcache",
@@ -80,6 +92,26 @@ public class MainFragment extends Fragment {
                 1f,
                 mMapView.getModel().frameBufferModel.getOverdrawFactor()
         );
+
+        File mapFile = Utility.getMapFile(getActivity());
+
+        if (mapFile == null) {
+            throw new NullPointerException("MapFile was null!");
+        }
+
+        MapDataStore mapDataStore = new MapFile(mapFile);
+
+        mTileRendererLayer = new TileRendererLayer(
+                mTileCache,
+                mapDataStore,
+                mMapView.getModel().mapViewPosition,
+                false,
+                true,
+                AndroidGraphicFactory.INSTANCE
+        );
+        mTileRendererLayer.setXmlRenderTheme(InternalRenderTheme.OSMARENDER);
+
+        mMapView.getLayerManager().getLayers().add(mTileRendererLayer);
 
         FloatingActionButton addPhoto = (FloatingActionButton) rootView.findViewById(R.id.add_photo_fab);
         addPhoto.setOnClickListener(new View.OnClickListener() {
@@ -120,32 +152,6 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        mMapView.getModel().mapViewPosition.setZoomLevel((byte) 16);
-
-        File mapFile = Utility.getMapFile(getActivity());
-        if (mapFile == null) return;
-
-        MapDataStore mapDataStore = new MapFile(mapFile);
-
-        mTileRendererLayer = new TileRendererLayer(
-                mTileCache,
-                mapDataStore,
-                mMapView.getModel().mapViewPosition,
-                false,
-                true,
-                AndroidGraphicFactory.INSTANCE
-        );
-        mTileRendererLayer.setXmlRenderTheme(InternalRenderTheme.OSMARENDER);
-
-        mMapView.getLayerManager().getLayers().add(mTileRendererLayer);
-
-        centerMapAtLatestLocation();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
 
@@ -154,6 +160,8 @@ public class MainFragment extends Fragment {
         getActivity().getContentResolver().registerContentObserver(
                 TrackerContract.BASE_CONTENT_URI, true, mLocationObserver
         );
+
+        centerMapAtLatestLocation();
     }
 
     @Override
@@ -166,18 +174,18 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        mMapView.getLayerManager().getLayers().remove(mTileRendererLayer);
+    public void onDestroyView() {
+        super.onDestroyView();
+
         mTileRendererLayer.onDestroy();
+        mTileCache.destroy();
+        mMapView.destroy();
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mTileCache.destroy();
-        mMapView.getModel().mapViewPosition.destroy();
-        mMapView.destroy();
+    public void onDestroy() {
+        super.onDestroy();
+
         AndroidGraphicFactory.clearResourceMemoryCache();
     }
 
