@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.chornsby.touristtracker.settings.LocationSettingsHelper;
+
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
@@ -27,6 +29,8 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<String> mAdapter;
+
+    private LocationSettingsHelper mSettingsHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,8 +155,8 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
                 intent.setAction(LocationService.ACTION_CLOSE);
             // And request best Location accuracy if toggling starts tracking
             } else {
-                LocationSettingsHelper settingsHelper = new LocationSettingsHelper(this);
-                settingsHelper.checkSettings();
+                mSettingsHelper = new LocationSettingsHelper(this);
+                mSettingsHelper.checkSettings();
             }
 
             startService(intent);

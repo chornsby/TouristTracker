@@ -1,10 +1,12 @@
-package com.chornsby.touristtracker;
+package com.chornsby.touristtracker.settings;
 
 
 import android.app.Activity;
 import android.content.IntentSender;
 import android.os.Bundle;
 
+import com.chornsby.touristtracker.Constants;
+import com.chornsby.touristtracker.Utility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -22,7 +24,6 @@ public class LocationSettingsHelper implements
         ResultCallback<LocationSettingsResult> {
 
     private static final LocationRequest LOCATION_REQUEST = Utility.createNewLocationRequest();
-    private static final int REQUEST_CHECK_SETTINGS = 42;
 
     private Activity mActivity;
     private GoogleApiClient mGoogleClient;
@@ -32,6 +33,10 @@ public class LocationSettingsHelper implements
     }
 
     public void checkSettings() {
+        GooglePlayServicesHelper mPlayServicesHelper = new GooglePlayServicesHelper(mActivity);
+
+        if (!mPlayServicesHelper.checkPlayServices()) return;
+
         mGoogleClient = new GoogleApiClient.Builder(mActivity)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -62,7 +67,7 @@ public class LocationSettingsHelper implements
             case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                 try {
                     status.startResolutionForResult(
-                            mActivity, REQUEST_CHECK_SETTINGS
+                            mActivity, Constants.REQUEST_CHECK_SETTINGS
                     );
                 } catch (IntentSender.SendIntentException e) {}
                 break;
