@@ -11,10 +11,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 
+import com.chornsby.touristtracker.navigationdrawer.NavDrawerListAdapter;
 import com.chornsby.touristtracker.settings.LocationSettingsHelper;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -24,11 +23,11 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 public class MainActivity extends ActionBarActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private MenuItem mLocationToggle;
-    private ListView mDrawerList;
+    private ExpandableListView mDrawerList;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    private ArrayAdapter<String> mAdapter;
+    private NavDrawerListAdapter mAdapter;
 
     private LocationSettingsHelper mSettingsHelper;
 
@@ -48,12 +47,47 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        mDrawerList = (ListView) findViewById(R.id.nav_list);
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mDrawerList = (ExpandableListView) findViewById(R.id.nav_list);
+        mDrawerList.setGroupIndicator(null);
+        mDrawerList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Crouton.cancelAllCroutons();
-                Crouton.makeText(MainActivity.this, "Functionality coming soon...", Style.INFO).show();
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                if (groupPosition != 0) {
+                    return true;
+                }
+
+                switch (childPosition) {
+                    case 0:
+                        Crouton.cancelAllCroutons();
+                        Crouton.makeText(MainActivity.this, "Survey functionality coming soon...", Style.INFO).show();
+                        mDrawerLayout.closeDrawers();
+                        break;
+                    case 1:
+                        Crouton.cancelAllCroutons();
+                        Crouton.makeText(MainActivity.this, "Survey functionality coming soon...", Style.INFO).show();
+                        mDrawerLayout.closeDrawers();
+                        break;
+                }
+
+            return true;
+        }
+    });
+        mDrawerList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                switch (groupPosition) {
+                    case 1:
+                        Crouton.cancelAllCroutons();
+                        Crouton.makeText(MainActivity.this, "Submit data coming soon...", Style.INFO).show();
+                        mDrawerLayout.closeDrawers();
+                        break;
+                    case 2:
+                        Crouton.cancelAllCroutons();
+                        Crouton.makeText(MainActivity.this, "Help coming soon...", Style.INFO).show();
+                        mDrawerLayout.closeDrawers();
+                        break;
+                }
+                return false;
             }
         });
 
@@ -72,24 +106,9 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void addDrawerItems() {
-        String[] navigationArray = {
-                "Review your journey",
-                "Answer surveys",
-                "Submit data",
-                "Settings",
-                "Help",
-        };
-        mAdapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                navigationArray
-        );
-        mDrawerList.setAdapter(mAdapter);
-    }
-
     private void setupDrawer() {
-        addDrawerItems();
+        mAdapter = new NavDrawerListAdapter(this);
+        mDrawerList.setAdapter(mAdapter);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
