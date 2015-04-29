@@ -8,8 +8,8 @@ android {
         applicationId "com.chornsby.touristtracker"
         minSdkVersion 10
         targetSdkVersion 22
-        versionCode 7
-        versionName "0.1.1"
+        versionCode 8
+        versionName "0.1.2"
     }
 
     packagingOptions{
@@ -29,7 +29,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.1.1'
-    compile 'com.google.android.gms:play-services:7.0.0'
+    compile 'com.google.android.gms:play-services:7.3.0'
     compile 'net.i2p.android.ext:floatingactionbutton:1.9.0'
     compile 'org.mapsforge:mapsforge-core:0.5.1'
     compile 'org.mapsforge:mapsforge-map:0.5.1'
