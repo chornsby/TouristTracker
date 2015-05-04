@@ -15,6 +15,7 @@ import android.widget.ExpandableListView;
 
 import com.chornsby.touristtracker.navigationdrawer.NavDrawerListAdapter;
 import com.chornsby.touristtracker.settings.LocationSettingsHelper;
+import com.chornsby.touristtracker.survey.FirstSurveyFragment;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -58,8 +59,9 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
 
                 switch (childPosition) {
                     case 0:
-                        Crouton.cancelAllCroutons();
-                        Crouton.makeText(MainActivity.this, "Survey functionality coming soon...", Style.INFO).show();
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.container, new FirstSurveyFragment())
+                                .commit();
                         mDrawerLayout.closeDrawers();
                         break;
                     case 1:
