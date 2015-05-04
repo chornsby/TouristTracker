@@ -43,9 +43,9 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainFragment extends Fragment {
+public class MapFragment extends Fragment {
 
-    private static final String LOG_TAG = MainFragment.class.getSimpleName();
+    private static final String LOG_TAG = MapFragment.class.getSimpleName();
 
     private static final int REQUEST_TAKE_PHOTO = 1;
     private static final int REQUEST_TAKE_NOTE = 2;
@@ -58,7 +58,7 @@ public class MainFragment extends Fragment {
 
     private Uri mCurrentPhotoUri;
 
-    public MainFragment() {
+    public MapFragment() {
     }
 
     @Override

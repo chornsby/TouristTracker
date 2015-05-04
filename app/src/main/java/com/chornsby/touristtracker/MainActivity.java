@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new MainFragment())
+                    .add(R.id.container, new MapFragment())
                     .commit();
         }
 
