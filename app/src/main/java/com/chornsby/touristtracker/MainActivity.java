@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import com.chornsby.touristtracker.actionbar.tabs.TabFragmentPagerAdapter;
 import com.chornsby.touristtracker.actionbar.tabs.NonDraggableViewPager;
+import com.chornsby.touristtracker.help.HelpActivity;
 import com.chornsby.touristtracker.settings.LocationSettingsHelper;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -104,8 +105,8 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_help) {
+            startActivity(new Intent(this, HelpActivity.class));
             return true;
         }
 

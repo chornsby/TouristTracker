@@ -66,6 +66,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.chornsby.touristtracker.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".help.HelpActivity"
+            android:label="@string/title_activity_help"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.chornsby.touristtracker.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

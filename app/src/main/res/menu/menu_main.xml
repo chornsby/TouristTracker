@@ -10,8 +10,8 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+        android:id="@+id/action_help"
+        android:title="@string/title_activity_help"
         android:orderInCategory="100"
         app:showAsAction="never" />
 
