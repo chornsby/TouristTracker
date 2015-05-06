@@ -4,15 +4,13 @@
 
     <permission
         android:name="com.chornsby.touristtracker.ACCESS_TRACKED_LOCATION"
-        android:label="@string/permission_track_location_label"
         android:description="@string/permission_track_location_description"
+        android:label="@string/permission_track_location_label"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.chornsby.touristtracker.ACCESS_TRACKED_LOCATION" />
 
@@ -22,10 +20,10 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:hardwareAccelerated="false" >
+        android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.google.android.version"
             android:value="@integer/google_play_services_version" />
@@ -33,7 +31,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleInstance">
+            android:launchMode="singleInstance" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,11 +40,11 @@
         </activity>
 
         <provider
-            android:authorities="@string/content_authority"
             android:name=".data.TrackerProvider"
+            android:authorities="@string/content_authority"
             android:exported="true"
-            android:syncable="false"
-            android:permission="com.chornsby.touristtracker.ACCESS_TRACKED_LOCATION"/>
+            android:permission="com.chornsby.touristtracker.ACCESS_TRACKED_LOCATION"
+            android:syncable="false" />
 
         <service
             android:name=".LocationService"
@@ -60,6 +58,14 @@
             android:exported="false" >
         </receiver>
 
+        <activity
+            android:name=".survey.FirstDaySurveyActivity"
+            android:label="@string/title_activity_first_day_survey"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.chornsby.touristtracker.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
