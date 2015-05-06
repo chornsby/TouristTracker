@@ -3,6 +3,7 @@
         <item name="colorPrimary">@color/tt_primary</item>
         <item name="colorPrimaryDark">@color/tt_primary_dark</item>
         <item name="colorAccent">@color/tt_secondary</item>
+        <item name="colorControlNormal">@color/tt_secondary</item>
         <item name="android:windowBackground">@color/tt_primary_window_background</item>
     </style>
 
