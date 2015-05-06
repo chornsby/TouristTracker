@@ -2,20 +2,18 @@ package com.chornsby.touristtracker;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ExpandableListView;
 
-import com.chornsby.touristtracker.navigationdrawer.NavDrawerListAdapter;
+import com.chornsby.touristtracker.actionbartabs.TabFragmentPagerAdapter;
+import com.chornsby.touristtracker.actionbartabs.NonDraggableViewPager;
 import com.chornsby.touristtracker.settings.LocationSettingsHelper;
-import com.chornsby.touristtracker.survey.FirstSurveyFragment;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -24,11 +22,9 @@ import de.keyboardsurfer.android.widget.crouton.Style;
 public class MainActivity extends ActionBarActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private MenuItem mLocationToggle;
-    private ExpandableListView mDrawerList;
 
-    private ActionBarDrawerToggle mDrawerToggle;
-    private DrawerLayout mDrawerLayout;
-    private NavDrawerListAdapter mAdapter;
+    private TabFragmentPagerAdapter mTabFragmentPagerAdapter;
+    private ViewPager mViewPager;
 
     private LocationSettingsHelper mSettingsHelper;
 
@@ -40,99 +36,45 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
         preferences.registerOnSharedPreferenceChangeListener(this);
 
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new MapFragment())
-                    .commit();
+
+        final ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar == null) {
+            throw new IllegalStateException("Action bar is missing!");
         }
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        mDrawerList = (ExpandableListView) findViewById(R.id.nav_list);
-        mDrawerList.setGroupIndicator(null);
-        mDrawerList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                if (groupPosition != 0) {
-                    return true;
-                }
+        mTabFragmentPagerAdapter = new TabFragmentPagerAdapter(getSupportFragmentManager());
 
-                switch (childPosition) {
-                    case 0:
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.container, new FirstSurveyFragment())
-                                .commit();
-                        mDrawerLayout.closeDrawers();
-                        break;
-                    case 1:
-                        Crouton.cancelAllCroutons();
-                        Crouton.makeText(MainActivity.this, "Survey functionality coming soon...", Style.INFO).show();
-                        mDrawerLayout.closeDrawers();
-                        break;
-                }
+        mViewPager = (NonDraggableViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mTabFragmentPagerAdapter);
 
-            return true;
-        }
-    });
-        mDrawerList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                switch (groupPosition) {
-                    case 1:
-                        Crouton.cancelAllCroutons();
-                        Crouton.makeText(MainActivity.this, "Submit data coming soon...", Style.INFO).show();
-                        mDrawerLayout.closeDrawers();
-                        break;
-                    case 2:
-                        Crouton.cancelAllCroutons();
-                        Crouton.makeText(MainActivity.this, "Help coming soon...", Style.INFO).show();
-                        mDrawerLayout.closeDrawers();
-                        break;
-                }
-                return false;
-            }
-        });
-
-        setupDrawer();
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    private void setupDrawer() {
-        mAdapter = new NavDrawerListAdapter(this);
-        mDrawerList.setAdapter(mAdapter);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open,
-                R.string.drawer_close) {
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
 
             @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                supportInvalidateOptionsMenu();
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                mViewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                supportInvalidateOptionsMenu();
-            }
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {}
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {}
         };
 
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        actionBar.addTab(actionBar.newTab()
+                .setText(getString(R.string.tab_label_map).toUpperCase())
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText(getString(R.string.tab_label_surveys).toUpperCase())
+                .setTabListener(tabListener));
+
+        actionBar.addTab(actionBar.newTab()
+                .setText(getString(R.string.tab_label_submit).toUpperCase())
+                .setTabListener(tabListener));
     }
 
     @Override
@@ -182,10 +124,6 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
 
             startService(intent);
 
-            return true;
-        }
-
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
 

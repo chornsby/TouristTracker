@@ -12,7 +12,7 @@ android {
         versionName "0.1.3"
     }
 
-    packagingOptions{
+    packagingOptions {
         exclude 'META-INF/LGPL2.1'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
@@ -28,15 +28,13 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'de.keyboardsurfer.android.widget:crouton:1.8.5@aar'
     compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:support-v4:22.1.1'
     compile 'com.google.android.gms:play-services:7.3.0'
     compile 'net.i2p.android.ext:floatingactionbutton:1.9.0'
     compile 'org.mapsforge:mapsforge-core:0.5.1'
     compile 'org.mapsforge:mapsforge-map:0.5.1'
     compile 'org.mapsforge:mapsforge-map-android:0.5.1'
     compile 'org.mapsforge:mapsforge-map-reader:0.5.1'
-    compile('de.keyboardsurfer.android.widget:crouton:1.8.5@aar') {
-        // exclusion is not necessary, but generally a good idea.
-        exclude group: 'com.google.android', module: 'support-v4'
-    }
 }

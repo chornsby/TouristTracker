@@ -16,6 +16,11 @@
     <string name="app_name">Tourist Tracker</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Tab labels -->
+    <string name="tab_label_map">Map</string>
+    <string name="tab_label_surveys">Surveys</string>
+    <string name="tab_label_submit">Submit</string>
+
     <!-- Notifications -->
     <string name="notif_text_tracking">Currently tracking your location</string>
 

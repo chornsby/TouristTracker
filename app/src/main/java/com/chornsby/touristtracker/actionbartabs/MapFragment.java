@@ -1,4 +1,4 @@
-package com.chornsby.touristtracker;
+package com.chornsby.touristtracker.actionbartabs;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,6 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.chornsby.touristtracker.LocationService;
+import com.chornsby.touristtracker.R;
+import com.chornsby.touristtracker.Utility;
 import com.chornsby.touristtracker.data.TrackerContract;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
@@ -74,7 +77,7 @@ public class MapFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateView");
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
         mMapView = (MapView) rootView.findViewById(R.id.map_view);
         mMapView.setClickable(true);
