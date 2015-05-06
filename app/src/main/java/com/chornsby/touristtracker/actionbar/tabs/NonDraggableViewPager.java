@@ -1,4 +1,4 @@
-package com.chornsby.touristtracker.actionbartabs;
+package com.chornsby.touristtracker.actionbar.tabs;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

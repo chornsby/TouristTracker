@@ -1,4 +1,4 @@
-package com.chornsby.touristtracker.actionbartabs;
+package com.chornsby.touristtracker.actionbar.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

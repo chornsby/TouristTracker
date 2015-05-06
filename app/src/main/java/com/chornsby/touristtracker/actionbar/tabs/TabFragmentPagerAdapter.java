@@ -1,8 +1,12 @@
-package com.chornsby.touristtracker.actionbartabs;
+package com.chornsby.touristtracker.actionbar.tabs;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.chornsby.touristtracker.actionbar.fragments.MapFragment;
+import com.chornsby.touristtracker.actionbar.fragments.SubmitFragment;
+import com.chornsby.touristtracker.actionbar.fragments.SurveysFragment;
 
 public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
 

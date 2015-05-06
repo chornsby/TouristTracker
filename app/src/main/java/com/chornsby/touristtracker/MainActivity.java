@@ -11,8 +11,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.chornsby.touristtracker.actionbartabs.TabFragmentPagerAdapter;
-import com.chornsby.touristtracker.actionbartabs.NonDraggableViewPager;
+import com.chornsby.touristtracker.actionbar.tabs.TabFragmentPagerAdapter;
+import com.chornsby.touristtracker.actionbar.tabs.NonDraggableViewPager;
 import com.chornsby.touristtracker.settings.LocationSettingsHelper;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
