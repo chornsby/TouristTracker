@@ -11,6 +11,10 @@
         Allows the app to track your location once every 15 seconds and store that information
         securely on your Android device.
     </string>
+    <string name="permission_saved_notes_label">saved notes</string>
+    <string name="permission_saved_notes_description">
+        Allows the app to read notes saved through the app during tracking.
+    </string>
 
     <!-- Titles -->
     <string name="app_name">Tourist Tracker</string>
