@@ -16,6 +16,7 @@
     <string name="app_name">Tourist Tracker</string>
     <string name="title_activity_first_day_survey">First day survey</string>
     <string name="title_activity_help">Help</string>
+    <string name="title_activity_note">Note</string>
 
     <!-- Tab labels -->
     <string name="tab_label_map">Map</string>
@@ -28,12 +29,15 @@
     <!-- Actions -->
     <string name="action_stop_tracking">Stop tracking</string>
     <string name="action_toggle_tracking">Toggle location tracking</string>
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_save">Save</string>
 
     <!-- Camera -->
     <string name="label_add_photo">Photo</string>
     <string name="photo_saved">Photo saved</string>
     <string name="error_camera_access">Something went wrong accessing the camera</string>
+
+    <!-- Notes -->
+    <string name="label_add_note">Note</string>
+    <string name="note_saved">Note saved</string>
 
 </resources>

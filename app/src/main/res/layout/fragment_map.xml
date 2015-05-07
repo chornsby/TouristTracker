@@ -40,7 +40,7 @@
             android:id="@+id/add_note_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_title="Note"
+            fab:fab_title="@string/label_add_note"
             fab:fab_colorNormal="@color/tt_primary"
             fab:fab_colorPressed="@color/tt_primary_accent"
             fab:fab_icon="@drawable/ic_action_pencil"/>

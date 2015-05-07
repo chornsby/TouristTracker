@@ -14,14 +14,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.chornsby.touristtracker.LocationService;
+import com.chornsby.touristtracker.NoteActivity;
 import com.chornsby.touristtracker.R;
 import com.chornsby.touristtracker.Utility;
 import com.chornsby.touristtracker.data.TrackerContract;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
+import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
 
 import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.model.LatLong;
@@ -56,6 +57,8 @@ public class MapFragment extends Fragment {
     private MapView mMapView;
     private TileCache mTileCache;
     private TileRendererLayer mTileRendererLayer;
+
+    private FloatingActionsMenu mFloatingActionsMenu;
 
     private LocationObserver mLocationObserver;
 
@@ -116,6 +119,8 @@ public class MapFragment extends Fragment {
 
         mMapView.getLayerManager().getLayers().add(mTileRendererLayer);
 
+        mFloatingActionsMenu = (FloatingActionsMenu) rootView.findViewById(R.id.floating_action_menu);
+
         FloatingActionButton addPhoto = (FloatingActionButton) rootView.findViewById(R.id.add_photo_fab);
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,6 +138,7 @@ public class MapFragment extends Fragment {
                 mCurrentPhotoUri = Uri.fromFile(photoFile);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mCurrentPhotoUri);
                 startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+                mFloatingActionsMenu.collapse();
             }
         });
 
@@ -140,8 +146,9 @@ public class MapFragment extends Fragment {
         addNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Currently not implemented.", Toast.LENGTH_SHORT)
-                        .show();
+                Intent intent = new Intent(getActivity(), NoteActivity.class);
+                startActivityForResult(intent, REQUEST_TAKE_NOTE);
+                mFloatingActionsMenu.collapse();
             }
         });
 
@@ -195,11 +202,23 @@ public class MapFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
-            Utility.addToGallery(getActivity(), mCurrentPhotoUri);
-            Crouton.makeText(
-                    getActivity(), R.string.photo_saved, Style.CONFIRM
-            ).show();
+
+        switch (requestCode) {
+            case REQUEST_TAKE_PHOTO:
+                if (resultCode == Activity.RESULT_OK) {
+                    Utility.addToGallery(getActivity(), mCurrentPhotoUri);
+                    Crouton.makeText(
+                            getActivity(), R.string.photo_saved, Style.CONFIRM
+                    ).show();
+                }
+                break;
+            case REQUEST_TAKE_NOTE:
+                if (resultCode == Activity.RESULT_OK) {
+                    Crouton.makeText(
+                            getActivity(), R.string.note_saved, Style.CONFIRM
+                    ).show();
+                }
+                break;
         }
     }
 
