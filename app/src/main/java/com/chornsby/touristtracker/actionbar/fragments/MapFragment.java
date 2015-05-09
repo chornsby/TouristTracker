@@ -1,6 +1,9 @@
 package com.chornsby.touristtracker.actionbar.fragments;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -10,16 +13,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import com.chornsby.touristtracker.LocationService;
-import com.chornsby.touristtracker.NoteActivity;
 import com.chornsby.touristtracker.R;
 import com.chornsby.touristtracker.Utility;
 import com.chornsby.touristtracker.data.TrackerContract;
+import com.chornsby.touristtracker.data.TrackerContract.NoteEntry;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
@@ -76,9 +82,8 @@ public class MapFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(LOG_TAG, "onCreateView");
 
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
@@ -146,9 +151,48 @@ public class MapFragment extends Fragment {
         addNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), NoteActivity.class);
-                startActivityForResult(intent, REQUEST_TAKE_NOTE);
                 mFloatingActionsMenu.collapse();
+
+                final FrameLayout noteRootView = (FrameLayout) inflater.inflate(R.layout.dialog_note, null);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                        .setTitle(getText(R.string.label_add_note))
+                        .setView(noteRootView)
+                        .setPositiveButton(getText(R.string.action_save), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                final EditText editText = (EditText) noteRootView.findViewById(R.id.edit_note);
+
+                                LatLong latLong = mMapView.getModel().mapViewPosition.getCenter();
+
+                                double latitude = latLong.latitude;
+                                double longitude = latLong.longitude;
+                                String note = editText.getText().toString();
+
+                                ContentValues noteValues = new ContentValues(4);
+                                noteValues.put(NoteEntry.COLUMN_TIME, System.currentTimeMillis());
+                                noteValues.put(NoteEntry.COLUMN_LATITUDE, latitude);
+                                noteValues.put(NoteEntry.COLUMN_LONGITUDE, longitude);
+                                noteValues.put(NoteEntry.COLUMN_TEXT, note);
+
+                                ContentResolver contentResolver = getActivity().getContentResolver();
+
+                                contentResolver.insert(NoteEntry.CONTENT_URI, noteValues);
+
+                                Crouton.makeText(
+                                        getActivity(), R.string.note_saved, Style.CONFIRM
+                                ).show();
+                            }
+                        })
+                        .setNegativeButton(getText(R.string.action_cancel), null);
+
+                AlertDialog alert;
+
+                alert = builder.create();
+                alert.getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
+                );
+                alert.show();
             }
         });
 

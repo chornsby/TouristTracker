@@ -11,16 +11,11 @@
         Allows the app to track your location once every 15 seconds and store that information
         securely on your Android device.
     </string>
-    <string name="permission_saved_notes_label">saved notes</string>
-    <string name="permission_saved_notes_description">
-        Allows the app to read notes saved through the app during tracking.
-    </string>
 
     <!-- Titles -->
     <string name="app_name">Tourist Tracker</string>
     <string name="title_activity_first_day_survey">First day survey</string>
     <string name="title_activity_help">Help</string>
-    <string name="title_activity_note">Note</string>
 
     <!-- Tab labels -->
     <string name="tab_label_map">Map</string>
@@ -33,7 +28,9 @@
     <!-- Actions -->
     <string name="action_stop_tracking">Stop tracking</string>
     <string name="action_toggle_tracking">Toggle location tracking</string>
+    <string name="action_add_note">Add note</string>
     <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
 
     <!-- Camera -->
     <string name="label_add_photo">Photo</string>
@@ -42,6 +39,7 @@
 
     <!-- Notes -->
     <string name="label_add_note">Note</string>
+    <string name="hint_add_note">Write a note</string>
     <string name="note_saved">Note saved</string>
 
 </resources>

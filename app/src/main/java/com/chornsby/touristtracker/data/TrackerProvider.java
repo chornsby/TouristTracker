@@ -14,11 +14,13 @@ public class TrackerProvider extends ContentProvider {
     private TrackerDbHelper mOpenHelper;
 
     static final int LOCATION = 100;
+    static final int NOTE = 200;
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
         matcher.addURI(TrackerContract.CONTENT_AUTHORITY, TrackerContract.PATH_LOCATION, LOCATION);
+        matcher.addURI(TrackerContract.CONTENT_AUTHORITY, TrackerContract.PATH_NOTE, NOTE);
 
         return matcher;
     }
@@ -46,6 +48,17 @@ public class TrackerProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
+            case NOTE:
+                cursor = mOpenHelper.getReadableDatabase().query(
+                        TrackerContract.NoteEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -60,6 +73,8 @@ public class TrackerProvider extends ContentProvider {
         switch (match) {
             case LOCATION:
                 return TrackerContract.LocationEntry.CONTENT_TYPE;
+            case NOTE:
+                return TrackerContract.NoteEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -70,12 +85,21 @@ public class TrackerProvider extends ContentProvider {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         Uri returnUri;
+        long id;
 
         switch (match) {
             case LOCATION:
-                long id = db.insert(TrackerContract.LocationEntry.TABLE_NAME, null, values);
+                id = db.insert(TrackerContract.LocationEntry.TABLE_NAME, null, values);
                 if (id > 0) {
                     returnUri = TrackerContract.LocationEntry.buildWeatherUri(id);
+                } else {
+                    throw new SQLException("Failed to insert row into " + uri);
+                }
+                break;
+            case NOTE:
+                id = db.insert(TrackerContract.NoteEntry.TABLE_NAME, null, values);
+                if (id > 0) {
+                    returnUri = TrackerContract.NoteEntry.buildNoteUri(id);
                 } else {
                     throw new SQLException("Failed to insert row into " + uri);
                 }
@@ -104,6 +128,13 @@ public class TrackerProvider extends ContentProvider {
                         selectionArgs
                 );
                 break;
+            case NOTE:
+                rowsDeleted = db.delete(
+                        TrackerContract.NoteEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -124,6 +155,14 @@ public class TrackerProvider extends ContentProvider {
             case LOCATION:
                 rowsUpdated = db.update(
                         TrackerContract.LocationEntry.TABLE_NAME,
+                        values,
+                        selection,
+                        selectionArgs
+                );
+                break;
+            case NOTE:
+                rowsUpdated = db.update(
+                        TrackerContract.NoteEntry.TABLE_NAME,
                         values,
                         selection,
                         selectionArgs

@@ -8,12 +8,6 @@
         android:label="@string/permission_track_location_label"
         android:protectionLevel="signature" />
 
-    <permission
-        android:name="com.chornsby.touristtracker.ACCESS_SAVED_NOTES"
-        android:description="@string/permission_saved_notes_description"
-        android:label="@string/permission_saved_notes_label"
-        android:protectionLevel="signature" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -52,13 +46,6 @@
             android:permission="com.chornsby.touristtracker.ACCESS_TRACKED_LOCATION"
             android:syncable="false" />
 
-        <provider
-            android:name=".data.NoteProvider"
-            android:authorities="@string/content_authority"
-            android:exported="true"
-            android:permission="com.chornsby.touristtracker.ACCESS_SAVED_NOTES"
-            android:syncable="false" />
-
         <service
             android:name=".LocationService"
             android:enabled="true"
@@ -83,15 +70,6 @@
             android:name=".help.HelpActivity"
             android:label="@string/title_activity_help"
             android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.chornsby.touristtracker.MainActivity" />
-        </activity>
-        <activity
-            android:name=".NoteActivity"
-            android:label="@string/title_activity_note"
-            android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="stateVisible" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.chornsby.touristtracker.MainActivity" />
