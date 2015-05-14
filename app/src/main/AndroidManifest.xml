@@ -52,6 +52,10 @@
             android:exported="false"
             android:label="Location tracking" />
 
+        <service
+            android:name=".submit.DataUploadService"
+            android:exported="false" />
+
         <receiver
             android:name=".LocationReceiver"
             android:enabled="true"

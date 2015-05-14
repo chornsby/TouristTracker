@@ -7,3 +7,5 @@
 Thumbs.db
 *.apk
 
+app/src/main/assets/touristtracker.p12
+app/src/main/java/com/chornsby/touristtracker/Secrets.java

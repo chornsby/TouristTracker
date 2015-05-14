@@ -54,36 +54,43 @@ public class Utility {
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    public static File getMapFile(Context context) {
+    public static File getFileFromAssets(Context context, String filename) {
         // Return null if the ExternalStorage is not available
         if (!isExternalStorageAvailable()) {
-            Log.d(LOG_TAG, "External storage unavailable to retrieve helsinki.map data.");
+            Log.d(LOG_TAG, "External storage unavailable to retrieve file: " + filename);
             return null;
         }
 
         // Get a reference to the required File object
-        File mapFile = new File(
+        File file = new File(
                 context.getExternalFilesDir(null),
-                context.getString(R.string.map_file_name)
+                filename
         );
 
-        // Return the MapFile if already available
-        if (mapFile.exists()) return mapFile;
+        // Return the file if already available
+        if (file.exists()) return file;
 
         // Else generate it
-        Log.d(LOG_TAG, "Creating the helsinki.map File object from asset data.");
+        Log.d(LOG_TAG, "Creating " + filename + " from asset data");
 
         try {
-            InputStream in = context.getAssets().open("helsinki.map");
-            copyInputStreamToFile(in, mapFile);
+            InputStream in = context.getAssets().open(filename);
+            copyInputStreamToFile(in, file);
 
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
 
-        return mapFile;
+        return file;
+    }
 
+    public static File getKeyFile(Context context) {
+        return getFileFromAssets(context, context.getString(R.string.key_file_name));
+    }
+
+    public static File getMapFile(Context context) {
+        return getFileFromAssets(context, context.getString(R.string.map_file_name));
     }
 
     private static void copyInputStreamToFile(InputStream in, File file) throws IOException {

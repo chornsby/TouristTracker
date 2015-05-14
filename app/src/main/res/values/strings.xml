@@ -1,6 +1,7 @@
 <resources>
     <!-- Untranslatable resources -->
     <string name="content_authority" translatable="false">com.chornsby.touristtracker</string>
+    <string name="key_file_name" translatable="false">touristtracker.p12</string>
     <string name="map_file_name" translatable="false">helsinki.map</string>
     <string name="photo_subdirectory_path" translatable="false">/tourist_tracker</string>
     <string name="pref_track_location" translatable="false">pref_track</string>
@@ -24,6 +25,9 @@
 
     <!-- Notifications -->
     <string name="notif_text_tracking">Currently tracking your location</string>
+    <string name="notif_text_uploading">Uploading data</string>
+    <string name="notif_text_upload_success">Data uploaded successfully</string>
+    <string name="notif_text_upload_failure">Data upload failed</string>
 
     <!-- Actions -->
     <string name="action_stop_tracking">Stop tracking</string>
@@ -31,6 +35,8 @@
     <string name="action_add_note">Add note</string>
     <string name="action_save">Save</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_submit_data">Submit data</string>
+    <string name="action_upload">Upload</string>
 
     <!-- Camera -->
     <string name="label_add_photo">Photo</string>
@@ -41,5 +47,14 @@
     <string name="label_add_note">Note</string>
     <string name="hint_add_note">Write a note</string>
     <string name="note_saved">Note saved</string>
+
+    <!-- Submit -->
+    <string name="label_submit_data">
+        Confirm your email address and press the button to submit the collected data
+    </string>
+    <string name="confirm_data_upload">Are you ready to upload your location data?</string>
+    <string name="confirm_data_upload_extra">Ensure you are connected to WIFI to avoid data charges</string>
+    <string name="hint_add_email">Email address</string>
+    <string name="email_invalid">Email address invalid</string>
 
 </resources>

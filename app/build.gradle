@@ -31,10 +31,12 @@ dependencies {
     compile 'de.keyboardsurfer.android.widget:crouton:1.8.5@aar'
     compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.android.support:support-v4:22.1.1'
-    compile 'com.google.android.gms:play-services:7.3.0'
+    compile 'com.google.android.gms:play-services-location:7.3.0'
     compile 'net.i2p.android.ext:floatingactionbutton:1.9.0'
     compile 'org.mapsforge:mapsforge-core:0.5.1'
     compile 'org.mapsforge:mapsforge-map:0.5.1'
     compile 'org.mapsforge:mapsforge-map-android:0.5.1'
     compile 'org.mapsforge:mapsforge-map-reader:0.5.1'
+    compile 'com.google.apis:google-api-services-storage:v1-rev34-1.20.0' exclude module: 'httpclient'
+    compile 'com.google.api-client:google-api-client-android:1.19.0' exclude module: 'httpclient'
 }
