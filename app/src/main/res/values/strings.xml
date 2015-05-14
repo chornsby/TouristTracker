@@ -1,4 +1,5 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
     <!-- Untranslatable resources -->
     <string name="content_authority" translatable="false">com.chornsby.touristtracker</string>
     <string name="key_file_name" translatable="false">touristtracker.p12</string>
