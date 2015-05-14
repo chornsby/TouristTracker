@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tourist Tracker</string>
+    <string name="action_save">Tallenna</string>
+    <string name="action_cancel">Peruuta</string>
+    <string name="hint_add_email">Sähköpostiosoite</string>
+    <string name="label_add_photo">Kuva</string>
+    <string name="label_add_note">Muistiinpano</string>
+    <string name="tab_label_submit">Lähetä</string>
+    <string name="action_upload">Lähetä</string>
+    <string name="tab_label_map">Kartta</string>
+    <string name="tab_label_surveys">Kyselyt</string>
+    <string name="title_activity_help">Ohje</string>
+    <string name="notif_text_upload_success">Tietojen lähetys onnistui</string>
+    <string name="notif_text_uploading">Tietoja lähetetään</string>
+    <string name="notif_text_upload_failure">Tietojen lähetys epäonnistui</string>
+    <string name="action_submit_data">Lähetä tiedot</string>
+    <string name="hint_add_note">Lisää muistiinpano</string>
+    <string name="action_add_note">Lisää muistiinpano</string>
+    <string name="note_saved">Muistiinpano tallennettu</string>
+    <string name="photo_saved">Kuva tallennettu</string>
+</resources>
