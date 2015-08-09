@@ -23,10 +23,8 @@ public class LocationReceiver extends BroadcastReceiver {
         // Receive the broadcast Location object
         Location location = (Location) intent.getExtras().get(FusedLocationProviderApi.KEY_LOCATION_CHANGED);
 
-        if (location == null) {
-            Log.e(LOG_TAG, "Received null data from intent");
-            return;
-        }
+        // Sometimes null data received
+        if (location == null) return;
 
         // Parse Location into database-friendly ContentValues
         ContentValues locationValues = Utility.getContentValuesFromLocation(location);
