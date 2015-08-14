@@ -8,8 +8,8 @@ android {
         applicationId "com.chornsby.touristtracker"
         minSdkVersion 10
         targetSdkVersion 22
-        versionCode 12
-        versionName "0.5.0"
+        versionCode 13
+        versionName "0.5.1"
     }
 
     packagingOptions {
