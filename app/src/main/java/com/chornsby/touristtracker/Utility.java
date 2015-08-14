@@ -42,9 +42,9 @@ public class Utility {
 
     public static LocationRequest createNewLocationRequest() {
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(15000);
+        locationRequest.setInterval(30000);
         locationRequest.setFastestInterval(5000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         return locationRequest;
     }
 

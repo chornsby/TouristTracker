@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import com.chornsby.touristtracker.actionbar.tabs.TabFragmentPagerAdapter;
 import com.chornsby.touristtracker.actionbar.tabs.NonDraggableViewPager;
 import com.chornsby.touristtracker.help.HelpActivity;
-import com.chornsby.touristtracker.settings.LocationSettingsHelper;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -26,8 +25,6 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
 
     private TabFragmentPagerAdapter mTabFragmentPagerAdapter;
     private ViewPager mViewPager;
-
-    private LocationSettingsHelper mSettingsHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,10 +114,6 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
             // Add Action if toggling should stop tracking
             if (Utility.isTracking(this)) {
                 intent.setAction(LocationService.ACTION_CLOSE);
-            // And request best Location accuracy if toggling starts tracking
-            } else {
-                mSettingsHelper = new LocationSettingsHelper(this);
-                mSettingsHelper.checkSettings();
             }
 
             startService(intent);
