@@ -21,7 +21,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import com.chornsby.touristtracker.LocationService;
+import com.chornsby.touristtracker.data.TrackerService;
 import com.chornsby.touristtracker.R;
 import com.chornsby.touristtracker.Utility;
 import com.chornsby.touristtracker.data.TrackerContract;
@@ -198,7 +198,7 @@ public class MapFragment extends Fragment {
 
         if (Utility.isTracking(getActivity())) {
             // Start Service without defined action in order to respect SharedPreferences
-            Intent intent = new Intent(getActivity(), LocationService.class);
+            Intent intent = new Intent(getActivity(), TrackerService.class);
             getActivity().startService(intent);
         }
 

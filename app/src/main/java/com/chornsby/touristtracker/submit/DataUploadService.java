@@ -89,17 +89,27 @@ public class DataUploadService extends IntentService {
         // Assume that everything works until proven wrong
         boolean success = true;
 
+        File activityFile = null;
+        File locationFile = null;
+        File notesFile = null;
+
         // Upload the user data to the server
         try {
-            File locationFile = JsonGenerator.generateLocationJsonFile(this);
-            FileUploader.tryUploadFile(this, locationFile, mUserEmail);
+            activityFile = JsonGenerator.generateActivityJsonFile(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            success = false;
+            Log.e(LOG_TAG, "Error uploading activity.json");
+        }
+
+        try {
+            locationFile = JsonGenerator.generateLocationJsonFile(this);
         } catch (Exception e) {
             e.printStackTrace();
             success = false;
             Log.e(LOG_TAG, "Error uploading location.json");
         }
 
-        File notesFile = null;
         try {
             notesFile = JsonGenerator.generateNotesJsonFile(this);
         } catch (Exception e) {
@@ -108,6 +118,8 @@ public class DataUploadService extends IntentService {
             Log.e(LOG_TAG, "Error uploading notes.json");
         }
 
+        FileUploader.tryUploadFile(this, activityFile, mUserEmail);
+        FileUploader.tryUploadFile(this, locationFile, mUserEmail);
         FileUploader.tryUploadFile(this, notesFile, mUserEmail);
 
         return success;

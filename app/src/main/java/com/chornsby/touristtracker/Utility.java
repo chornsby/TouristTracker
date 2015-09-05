@@ -9,10 +9,15 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.chornsby.touristtracker.data.TrackerContract.ActivityEntry;
 import com.chornsby.touristtracker.data.TrackerContract.LocationEntry;
+import com.google.android.gms.location.ActivityRecognitionResult;
+import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,7 +32,21 @@ public class Utility {
 
     public static final String LOG_TAG = Utility.class.getSimpleName();
 
-    public static ContentValues getContentValuesFromLocation(Location location) {
+    public static ContentValues getContentValues(ActivityRecognitionResult result, DetectedActivity activity) {
+        ContentValues values = new ContentValues();
+        values.put(ActivityEntry.COLUMN_CONFIDENCE, activity.getConfidence());
+        values.put(ActivityEntry.COLUMN_TIME, result.getTime());
+        values.put(ActivityEntry.COLUMN_TYPE, activity.getType());
+        return values;
+    }
+
+    @Nullable
+    public static ContentValues getContentValues(LocationResult result) {
+        Location location = result.getLastLocation();
+
+        // No last-known location
+        if (location == null) return null;
+
         ContentValues values = new ContentValues();
         values.put(LocationEntry.COLUMN_ACCURACY, location.getAccuracy());
         values.put(LocationEntry.COLUMN_ALTITUDE, location.getAltitude());

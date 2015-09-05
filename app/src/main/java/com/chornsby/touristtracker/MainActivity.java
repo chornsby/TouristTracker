@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import com.chornsby.touristtracker.actionbar.tabs.TabFragmentPagerAdapter;
 import com.chornsby.touristtracker.actionbar.tabs.NonDraggableViewPager;
+import com.chornsby.touristtracker.data.TrackerService;
 import com.chornsby.touristtracker.help.HelpActivity;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -109,11 +110,11 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
 
         if (id == R.id.action_toggle_tracking) {
             // Create an Intent to toggle tracking
-            Intent intent = new Intent(this, LocationService.class);
+            Intent intent = new Intent(this, TrackerService.class);
 
             // Add Action if toggling should stop tracking
             if (Utility.isTracking(this)) {
-                intent.setAction(LocationService.ACTION_CLOSE);
+                intent.setAction(TrackerService.ACTION_CLOSE);
             }
 
             startService(intent);

@@ -1,4 +1,4 @@
-package com.chornsby.touristtracker;
+package com.chornsby.touristtracker.data;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -10,24 +10,28 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
+import com.chornsby.touristtracker.MainActivity;
+import com.chornsby.touristtracker.R;
+import com.chornsby.touristtracker.Utility;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-public class LocationService extends Service implements
+public class TrackerService extends Service implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
 
-    private static final String LOG_TAG = LocationService.class.getSimpleName();
+    private static final String LOG_TAG = TrackerService.class.getSimpleName();
 
     private GoogleApiClient mGoogleApiClient;
-    private PendingIntent mLocationIntent;
+    private PendingIntent mTrackerIntent;
     private static final int REQUEST_CODE = 42;
     private static final int FOREGROUND_ID = 42;
     public static final String ACTION_CLOSE = "stop";
 
-    public LocationService() {
+    public TrackerService() {
     }
 
     @Override
@@ -39,6 +43,7 @@ public class LocationService extends Service implements
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
+                .addApi(ActivityRecognition.API)
                 .build();
     }
 
@@ -48,8 +53,11 @@ public class LocationService extends Service implements
 
         // Remove connection from Google Api Client
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(
+                    mGoogleApiClient, mTrackerIntent
+            );
             LocationServices.FusedLocationApi.removeLocationUpdates(
-                    mGoogleApiClient, mLocationIntent
+                    mGoogleApiClient, mTrackerIntent
             );
             mGoogleApiClient.disconnect();
         }
@@ -105,7 +113,7 @@ public class LocationService extends Service implements
     }
 
     private PendingIntent getServicePendingIntent(String action) {
-        Intent intent = new Intent(this, LocationService.class).setAction(action);
+        Intent intent = new Intent(this, TrackerService.class).setAction(action);
         return PendingIntent.getService(this, 0, intent, 0);
     }
 
@@ -113,12 +121,15 @@ public class LocationService extends Service implements
     public void onConnected(Bundle bundle) {
         LocationRequest request = Utility.createNewLocationRequest();
 
-        Intent intent = new Intent(this, LocationReceiver.class);
-        mLocationIntent = PendingIntent.getBroadcast(
+        Intent intent = new Intent(this, TrackerReceiver.class);
+        mTrackerIntent = PendingIntent.getBroadcast(
                 getApplicationContext(), REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT
         );
+        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(
+                mGoogleApiClient, 30000, mTrackerIntent
+        );
         LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, request, mLocationIntent
+                mGoogleApiClient, request, mTrackerIntent
         );
     }
 

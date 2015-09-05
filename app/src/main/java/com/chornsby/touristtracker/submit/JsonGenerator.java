@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.chornsby.touristtracker.Utility;
+import com.chornsby.touristtracker.data.TrackerContract.ActivityEntry;
 import com.chornsby.touristtracker.data.TrackerContract.LocationEntry;
 import com.chornsby.touristtracker.data.TrackerContract.NoteEntry;
 
@@ -19,6 +20,11 @@ import java.io.IOException;
 public class JsonGenerator {
 
     private static final String LOG_TAG = JsonGenerator.class.getSimpleName();
+
+    public static File generateActivityJsonFile(Context context) throws IOException, JSONException {
+        JSONArray jsonArray = generateActivityJSON(context);
+        return generateFile(context, jsonArray, "activity.json");
+    }
 
     public static File generateLocationJsonFile(Context context) throws IOException, JSONException {
         JSONArray jsonArray = generateLocationJSON(context);
@@ -43,6 +49,44 @@ public class JsonGenerator {
         writer.close();
 
         return output;
+    }
+
+    private static JSONArray generateActivityJSON(Context context) throws JSONException {
+        Uri uri = ActivityEntry.CONTENT_URI;
+        Cursor cursor = context.getContentResolver().query(
+                uri,
+                null,
+                null,
+                null,
+                null
+        );
+
+        final int INDEX_ID = cursor.getColumnIndex(ActivityEntry._ID);
+        final int INDEX_CONFIDENCE = cursor.getColumnIndex(ActivityEntry.COLUMN_CONFIDENCE);
+        final int INDEX_TIME = cursor.getColumnIndex(ActivityEntry.COLUMN_TIME);
+        final int INDEX_TYPE = cursor.getColumnIndex(ActivityEntry.COLUMN_TYPE);
+
+        JSONArray jsonArray = new JSONArray();
+
+        while (cursor.moveToNext()) {
+            JSONObject jsonObject = new JSONObject();
+
+            int id = cursor.getInt(INDEX_ID);
+            int confidence = cursor.getInt(INDEX_CONFIDENCE);
+            long time = cursor.getLong(INDEX_TIME);
+            int type = cursor.getInt(INDEX_TYPE);
+
+            jsonObject.put(ActivityEntry._ID, id);
+            jsonObject.put(ActivityEntry.COLUMN_CONFIDENCE, confidence);
+            jsonObject.put(ActivityEntry.COLUMN_TIME, time);
+            jsonObject.put(ActivityEntry.COLUMN_TYPE, type);
+
+            jsonArray.put(jsonObject);
+        }
+
+        cursor.close();
+
+        return jsonArray;
     }
 
     private static JSONArray generateLocationJSON(Context context) throws JSONException {
