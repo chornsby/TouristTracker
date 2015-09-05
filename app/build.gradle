@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion '22.0.1'
+    compileSdkVersion 23
+    buildToolsVersion '23.0.1'
 
     defaultConfig {
         applicationId "com.chornsby.touristtracker"
         minSdkVersion 10
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 13
         versionName "0.5.1"
     }
@@ -29,8 +29,8 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'de.keyboardsurfer.android.widget:crouton:1.8.5@aar'
-    compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.android.support:support-v4:22.2.1'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:support-v4:23.0.1'
     compile 'com.google.android.gms:play-services-location:7.8.0'
     compile 'net.i2p.android.ext:floatingactionbutton:1.10.0'
     compile 'org.mapsforge:mapsforge-core:0.5.1'
