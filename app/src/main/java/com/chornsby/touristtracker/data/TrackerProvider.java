@@ -13,12 +13,14 @@ public class TrackerProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private TrackerDbHelper mOpenHelper;
 
+    static final int ACTIVITY = 50;
     static final int LOCATION = 100;
     static final int NOTE = 200;
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
+        matcher.addURI(TrackerContract.CONTENT_AUTHORITY, TrackerContract.PATH_ACTIVITY, ACTIVITY);
         matcher.addURI(TrackerContract.CONTENT_AUTHORITY, TrackerContract.PATH_LOCATION, LOCATION);
         matcher.addURI(TrackerContract.CONTENT_AUTHORITY, TrackerContract.PATH_NOTE, NOTE);
 
@@ -37,6 +39,17 @@ public class TrackerProvider extends ContentProvider {
         Cursor cursor;
 
         switch (sUriMatcher.match(uri)) {
+            case ACTIVITY:
+                cursor = mOpenHelper.getReadableDatabase().query(
+                        TrackerContract.ActivityEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
             case LOCATION:
                 cursor = mOpenHelper.getReadableDatabase().query(
                         TrackerContract.LocationEntry.TABLE_NAME,
@@ -71,6 +84,8 @@ public class TrackerProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
 
         switch (match) {
+            case ACTIVITY:
+                return TrackerContract.ActivityEntry.CONTENT_TYPE;
             case LOCATION:
                 return TrackerContract.LocationEntry.CONTENT_TYPE;
             case NOTE:
@@ -88,10 +103,18 @@ public class TrackerProvider extends ContentProvider {
         long id;
 
         switch (match) {
+            case ACTIVITY:
+                id = db.insert(TrackerContract.ActivityEntry.TABLE_NAME, null, values);
+                if (id > 0) {
+                    returnUri = TrackerContract.ActivityEntry.buildActivityUri(id);
+                } else {
+                    throw new SQLException("Failed to insert row into " + uri);
+                }
+                break;
             case LOCATION:
                 id = db.insert(TrackerContract.LocationEntry.TABLE_NAME, null, values);
                 if (id > 0) {
-                    returnUri = TrackerContract.LocationEntry.buildWeatherUri(id);
+                    returnUri = TrackerContract.LocationEntry.buildLocationUri(id);
                 } else {
                     throw new SQLException("Failed to insert row into " + uri);
                 }
@@ -121,6 +144,13 @@ public class TrackerProvider extends ContentProvider {
         if (selection == null) selection = "1";
 
         switch (match) {
+            case ACTIVITY:
+                rowsDeleted = db.delete(
+                        TrackerContract.ActivityEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs
+                );
+                break;
             case LOCATION:
                 rowsDeleted = db.delete(
                         TrackerContract.LocationEntry.TABLE_NAME,
@@ -152,6 +182,14 @@ public class TrackerProvider extends ContentProvider {
         int rowsUpdated;
 
         switch (match) {
+            case ACTIVITY:
+                rowsUpdated = db.update(
+                        TrackerContract.ActivityEntry.TABLE_NAME,
+                        values,
+                        selection,
+                        selectionArgs
+                );
+                break;
             case LOCATION:
                 rowsUpdated = db.update(
                         TrackerContract.LocationEntry.TABLE_NAME,

@@ -4,12 +4,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.chornsby.touristtracker.data.TrackerContract.ActivityEntry;
 import com.chornsby.touristtracker.data.TrackerContract.LocationEntry;
 import com.chornsby.touristtracker.data.TrackerContract.NoteEntry;
 
 public class TrackerDbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     static final String DATABASE_NAME = "tracker.db";
 
@@ -19,6 +20,12 @@ public class TrackerDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        final String SQL_CREATE_ACTIVITY_TABLE = "CREATE TABLE " + ActivityEntry.TABLE_NAME + " (" +
+                ActivityEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                ActivityEntry.COLUMN_CONFIDENCE + " INTEGER NOT NULL, " +
+                ActivityEntry.COLUMN_TIME + " INTEGER NOT NULL, " +
+                ActivityEntry.COLUMN_TYPE + " INTEGER NOT NULL);";
+
         final String SQL_CREATE_LOCATION_TABLE = "CREATE TABLE " + LocationEntry.TABLE_NAME + " (" +
                 LocationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 LocationEntry.COLUMN_ACCURACY + " REAL NOT NULL, " +
@@ -37,6 +44,7 @@ public class TrackerDbHelper extends SQLiteOpenHelper {
                 NoteEntry.COLUMN_LONGITUDE + " REAL NOT NULL, " +
                 NoteEntry.COLUMN_TEXT + " TEXT);";
 
+        db.execSQL(SQL_CREATE_ACTIVITY_TABLE);
         db.execSQL(SQL_CREATE_LOCATION_TABLE);
         db.execSQL(SQL_CREATE_NOTE_TABLE);
     }
@@ -44,6 +52,7 @@ public class TrackerDbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // For now, just drop and recreate
+        db.execSQL("DROP TABLE IF EXISTS " + ActivityEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + LocationEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + NoteEntry.TABLE_NAME);
         onCreate(db);
