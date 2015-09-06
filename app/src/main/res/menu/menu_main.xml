@@ -10,9 +10,9 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_help"
-        android:title="@string/title_activity_help"
+        android:id="@+id/action_submit"
+        android:title="@string/title_activity_submit"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
 </menu>

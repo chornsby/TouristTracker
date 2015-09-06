@@ -5,14 +5,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.chornsby.touristtracker.actionbar.fragments.MapFragment;
-import com.chornsby.touristtracker.actionbar.fragments.SubmitFragment;
+import com.chornsby.touristtracker.actionbar.fragments.NotesFragment;
 import com.chornsby.touristtracker.actionbar.fragments.SurveysFragment;
 
 public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public static final int MAP_FRAGMENT = 0;
-    public static final int SURVEY_FRAGMENT = 1;
-    public static final int SUBMIT_FRAGMENT = 2;
+    public static final int NOTES_FRAGMENT = 1;
+    public static final int SURVEY_FRAGMENT = 2;
 
     public TabFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -23,10 +23,10 @@ public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case MAP_FRAGMENT:
                 return new MapFragment();
+            case NOTES_FRAGMENT:
+                return new NotesFragment();
             case SURVEY_FRAGMENT:
                 return new SurveysFragment();
-            case SUBMIT_FRAGMENT:
-                return new SubmitFragment();
         }
         throw new IllegalArgumentException("Tab position out of range");
     }
@@ -37,10 +37,10 @@ public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case MAP_FRAGMENT:
                 return "MAP";
+            case NOTES_FRAGMENT:
+                return "NOTES";
             case SURVEY_FRAGMENT:
                 return "SURVEYS";
-            case SUBMIT_FRAGMENT:
-                return "SUBMIT";
         }
         throw new IllegalArgumentException("Tab position out of range");
     }

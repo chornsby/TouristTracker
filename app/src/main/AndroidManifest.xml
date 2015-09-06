@@ -52,7 +52,6 @@
             android:enabled="true"
             android:exported="false"
             android:label="Location tracking" />
-
         <service
             android:name=".submit.DataUploadService"
             android:exported="false" />
@@ -72,8 +71,8 @@
                 android:value="com.chornsby.touristtracker.MainActivity" />
         </activity>
         <activity
-            android:name=".help.HelpActivity"
-            android:label="@string/title_activity_help"
+            android:name=".submit.SubmitActivity"
+            android:label="@string/title_activity_submit"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

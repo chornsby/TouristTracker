@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import com.chornsby.touristtracker.actionbar.tabs.TabFragmentPagerAdapter;
 import com.chornsby.touristtracker.actionbar.tabs.NonDraggableViewPager;
 import com.chornsby.touristtracker.data.TrackerService;
-import com.chornsby.touristtracker.help.HelpActivity;
+import com.chornsby.touristtracker.submit.SubmitActivity;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -68,11 +68,11 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
                 .setTabListener(tabListener));
 
         actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.tab_label_surveys).toUpperCase())
+                .setText(getString(R.string.tab_label_notes).toUpperCase())
                 .setTabListener(tabListener));
 
         actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.tab_label_submit).toUpperCase())
+                .setText(getString(R.string.tab_label_surveys).toUpperCase())
                 .setTabListener(tabListener));
     }
 
@@ -103,8 +103,8 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_help) {
-            startActivity(new Intent(this, HelpActivity.class));
+        if (id == R.id.action_submit) {
+            startActivity(new Intent(this, SubmitActivity.class));
             return true;
         }
 
