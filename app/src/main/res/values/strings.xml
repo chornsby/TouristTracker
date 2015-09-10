@@ -18,6 +18,7 @@
     <string name="app_name">Tourist Tracker</string>
     <string name="title_activity_first_day_survey">First day survey</string>
     <string name="title_activity_submit">Submit</string>
+    <string name="title_activity_note_detail">Edit note</string>
 
     <!-- Tab labels -->
     <string name="tab_label_map">Map</string>
@@ -38,6 +39,7 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_submit_data">Submit data</string>
     <string name="action_upload">Upload</string>
+    <string name="action_discard">Discard</string>
 
     <!-- Camera -->
     <string name="label_add_photo">Photo</string>

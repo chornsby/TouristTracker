@@ -78,6 +78,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.chornsby.touristtracker.MainActivity" />
         </activity>
+        <activity
+            android:name=".notes.NoteDetailActivity"
+            android:label="@string/title_activity_note_detail"
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateVisible" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.chornsby.touristtracker.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
