@@ -7,21 +7,23 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.chornsby.touristtracker.data.TrackerContract;
+import com.chornsby.touristtracker.notes.NoteCursorAdapter;
 import com.chornsby.touristtracker.notes.NoteDetailActivity;
 
 public class NotesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    SimpleCursorAdapter mAdapter;
+    CursorAdapter mAdapter;
     private static final String[] PROJECTION = {
             TrackerContract.NoteEntry._ID,
             TrackerContract.NoteEntry.COLUMN_TEXT,
+            TrackerContract.NoteEntry.COLUMN_TIME,
     };
 
     public NotesFragment() {}
@@ -30,17 +32,7 @@ public class NotesFragment extends ListFragment implements LoaderManager.LoaderC
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        String[] fromColumns = {TrackerContract.NoteEntry.COLUMN_TEXT};
-        int[] toViews = {android.R.id.text1};
-
-        mAdapter = new SimpleCursorAdapter(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                null,
-                fromColumns,
-                toViews,
-                0
-        );
+        mAdapter = new NoteCursorAdapter(getActivity(), null, 0);
 
         setListAdapter(mAdapter);
         getLoaderManager().initLoader(0, null, this);
