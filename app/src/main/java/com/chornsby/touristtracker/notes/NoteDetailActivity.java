@@ -2,6 +2,7 @@ package com.chornsby.touristtracker.notes;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -18,6 +19,9 @@ public class NoteDetailActivity extends AppCompatActivity {
     TextView mRelativeDateTime;
     EditText mEditText;
 
+    String mSelection;
+    String[] mSelectionArgs;
+
     Note mNote;
 
     @Override
@@ -26,14 +30,14 @@ public class NoteDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_note_detail);
 
         Intent intent = getIntent();
-        String selection = TrackerContract.NoteEntry._ID + "=?";
-        String[] selectionArgs = {intent.getStringExtra(TrackerContract.NoteEntry.TABLE_NAME)};
+        mSelection = TrackerContract.NoteEntry._ID + "=?";
+        mSelectionArgs = new String[] {intent.getStringExtra(TrackerContract.NoteEntry.TABLE_NAME)};
 
         Cursor cursor = getContentResolver().query(
                 TrackerContract.NoteEntry.CONTENT_URI,
                 null,
-                selection,
-                selectionArgs,
+                mSelection,
+                mSelectionArgs,
                 null
         );
 
@@ -86,6 +90,15 @@ public class NoteDetailActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        if (id == R.id.action_discard) {
+            getContentResolver().delete(
+                    TrackerContract.NoteEntry.CONTENT_URI,
+                    mSelection,
+                    mSelectionArgs
+            );
+            NavUtils.navigateUpFromSameTask(this);
+        }
 
         return super.onOptionsItemSelected(item);
     }
