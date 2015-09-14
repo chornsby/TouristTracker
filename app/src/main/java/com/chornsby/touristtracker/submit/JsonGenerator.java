@@ -154,8 +154,6 @@ public class JsonGenerator {
 
         final int INDEX_ID = cursor.getColumnIndex(NoteEntry._ID);
         final int INDEX_TIME = cursor.getColumnIndex(NoteEntry.COLUMN_TIME);
-        final int INDEX_LATITUDE = cursor.getColumnIndex(NoteEntry.COLUMN_LATITUDE);
-        final int INDEX_LONGITUDE = cursor.getColumnIndex(NoteEntry.COLUMN_LONGITUDE);
         final int INDEX_TEXT = cursor.getColumnIndex(NoteEntry.COLUMN_TEXT);
 
         JSONArray jsonArray = new JSONArray();
@@ -165,14 +163,10 @@ public class JsonGenerator {
 
             int id = cursor.getInt(INDEX_ID);
             long time = cursor.getLong(INDEX_TIME);
-            float latitude = cursor.getFloat(INDEX_LATITUDE);
-            float longitude = cursor.getFloat(INDEX_LONGITUDE);
             String text = cursor.getString(INDEX_TEXT);
 
             jsonObject.put(NoteEntry._ID, id);
             jsonObject.put(NoteEntry.COLUMN_TIME, time);
-            jsonObject.put(NoteEntry.COLUMN_LATITUDE, latitude);
-            jsonObject.put(NoteEntry.COLUMN_LONGITUDE, longitude);
             jsonObject.put(NoteEntry.COLUMN_TEXT, text);
 
             jsonArray.put(jsonObject);

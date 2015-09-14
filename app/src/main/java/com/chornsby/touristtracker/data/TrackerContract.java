@@ -62,8 +62,6 @@ public class TrackerContract {
         public static final String TABLE_NAME = "note";
 
         public static final String COLUMN_TIME = "time";
-        public static final String COLUMN_LATITUDE = "latitude";
-        public static final String COLUMN_LONGITUDE = "longitude";
         public static final String COLUMN_TEXT = "text";
 
         public static Uri buildNoteUri(long id) {

@@ -1,7 +1,9 @@
 package com.chornsby.touristtracker.notes;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,8 +32,16 @@ public class NoteDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_note_detail);
 
         Intent intent = getIntent();
+
+        String rowId = intent.getStringExtra(TrackerContract.NoteEntry.TABLE_NAME);
+
+        if (rowId.equals("")) {
+            rowId = createNote();
+            intent.putExtra(TrackerContract.NoteEntry.TABLE_NAME, rowId);
+        }
+
         mSelection = TrackerContract.NoteEntry._ID + "=?";
-        mSelectionArgs = new String[] {intent.getStringExtra(TrackerContract.NoteEntry.TABLE_NAME)};
+        mSelectionArgs = new String[] {rowId};
 
         Cursor cursor = getContentResolver().query(
                 TrackerContract.NoteEntry.CONTENT_URI,
@@ -62,6 +72,15 @@ public class NoteDetailActivity extends AppCompatActivity {
 
         mRelativeDateTime = (TextView) findViewById(R.id.relative_date_time);
         mRelativeDateTime.setText(relativeDateTime);
+    }
+
+    private String createNote() {
+        ContentValues contentValues = new Note().asContentValues();
+        Uri uri = getContentResolver().insert(
+                TrackerContract.NoteEntry.CONTENT_URI,
+                contentValues
+        );
+        return uri.getLastPathSegment();
     }
 
     @Override

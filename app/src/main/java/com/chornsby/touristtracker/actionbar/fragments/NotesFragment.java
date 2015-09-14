@@ -18,6 +18,8 @@ import com.chornsby.touristtracker.data.TrackerContract;
 import com.chornsby.touristtracker.notes.NoteCursorAdapter;
 import com.chornsby.touristtracker.notes.NoteDetailActivity;
 
+import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
+
 public class NotesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     CursorAdapter mAdapter;
@@ -27,11 +29,23 @@ public class NotesFragment extends ListFragment implements LoaderManager.LoaderC
             TrackerContract.NoteEntry.COLUMN_TIME,
     };
 
+    FloatingActionButton mFloatingActionButton;
+
     public NotesFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_notes, container, false);
+
+        mFloatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.add_note_fab);
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), NoteDetailActivity.class);
+                intent.putExtra(TrackerContract.NoteEntry.TABLE_NAME, "");
+                startActivity(intent);
+            }
+        });
 
         mAdapter = new NoteCursorAdapter(getActivity(), null, 0);
 
