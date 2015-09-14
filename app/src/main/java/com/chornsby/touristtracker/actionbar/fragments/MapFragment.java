@@ -57,18 +57,11 @@ public class MapFragment extends Fragment {
 
     private static final String LOG_TAG = MapFragment.class.getSimpleName();
 
-    private static final int REQUEST_TAKE_PHOTO = 1;
-    private static final int REQUEST_TAKE_NOTE = 2;
-
     private MapView mMapView;
     private TileCache mTileCache;
     private TileRendererLayer mTileRendererLayer;
 
-    private FloatingActionsMenu mFloatingActionsMenu;
-
     private LocationObserver mLocationObserver;
-
-    private Uri mCurrentPhotoUri;
 
     public MapFragment() {
     }
@@ -124,78 +117,6 @@ public class MapFragment extends Fragment {
 
         mMapView.getLayerManager().getLayers().add(mTileRendererLayer);
 
-        mFloatingActionsMenu = (FloatingActionsMenu) rootView.findViewById(R.id.floating_action_menu);
-
-        FloatingActionButton addPhoto = (FloatingActionButton) rootView.findViewById(R.id.add_photo_fab);
-        addPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File photoFile;
-                try {
-                    photoFile = Utility.createImageFile(getActivity());
-                } catch (IOException e) {
-                    Crouton.makeText(
-                            getActivity(), R.string.error_camera_access, Style.ALERT
-                    );
-                    return;
-                }
-                mCurrentPhotoUri = Uri.fromFile(photoFile);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, mCurrentPhotoUri);
-                startActivityForResult(intent, REQUEST_TAKE_PHOTO);
-                mFloatingActionsMenu.collapse();
-            }
-        });
-
-        FloatingActionButton addNote = (FloatingActionButton) rootView.findViewById(R.id.add_note_fab);
-        addNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFloatingActionsMenu.collapse();
-
-                final FrameLayout noteRootView = (FrameLayout) inflater.inflate(R.layout.dialog_note, null);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
-                        .setTitle(getText(R.string.label_add_note))
-                        .setView(noteRootView)
-                        .setPositiveButton(getText(R.string.action_save), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                final EditText editText = (EditText) noteRootView.findViewById(R.id.edit_note);
-
-                                LatLong latLong = mMapView.getModel().mapViewPosition.getCenter();
-
-                                double latitude = latLong.latitude;
-                                double longitude = latLong.longitude;
-                                String note = editText.getText().toString();
-
-                                ContentValues noteValues = new ContentValues(4);
-                                noteValues.put(NoteEntry.COLUMN_TIME, System.currentTimeMillis());
-                                noteValues.put(NoteEntry.COLUMN_LATITUDE, latitude);
-                                noteValues.put(NoteEntry.COLUMN_LONGITUDE, longitude);
-                                noteValues.put(NoteEntry.COLUMN_TEXT, note);
-
-                                ContentResolver contentResolver = getActivity().getContentResolver();
-
-                                contentResolver.insert(NoteEntry.CONTENT_URI, noteValues);
-
-                                Crouton.makeText(
-                                        getActivity(), R.string.note_saved, Style.CONFIRM
-                                ).show();
-                            }
-                        })
-                        .setNegativeButton(getText(R.string.action_cancel), null);
-
-                AlertDialog alert;
-
-                alert = builder.create();
-                alert.getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
-                );
-                alert.show();
-            }
-        });
-
         if (Utility.isTracking(getActivity())) {
             // Start Service without defined action in order to respect SharedPreferences
             Intent intent = new Intent(getActivity(), TrackerService.class);
@@ -241,29 +162,6 @@ public class MapFragment extends Fragment {
         super.onDestroy();
 
         AndroidGraphicFactory.clearResourceMemoryCache();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case REQUEST_TAKE_PHOTO:
-                if (resultCode == Activity.RESULT_OK) {
-                    Utility.addToGallery(getActivity(), mCurrentPhotoUri);
-                    Crouton.makeText(
-                            getActivity(), R.string.photo_saved, Style.CONFIRM
-                    ).show();
-                }
-                break;
-            case REQUEST_TAKE_NOTE:
-                if (resultCode == Activity.RESULT_OK) {
-                    Crouton.makeText(
-                            getActivity(), R.string.note_saved, Style.CONFIRM
-                    ).show();
-                }
-                break;
-        }
     }
 
     private LatLong getLatestLatLong() {

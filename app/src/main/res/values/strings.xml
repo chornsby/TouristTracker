@@ -41,11 +41,6 @@
     <string name="action_upload">Upload</string>
     <string name="action_discard">Discard</string>
 
-    <!-- Camera -->
-    <string name="label_add_photo">Photo</string>
-    <string name="photo_saved">Photo saved</string>
-    <string name="error_camera_access">Something went wrong accessing the camera</string>
-
     <!-- Notes -->
     <string name="label_add_note">Note</string>
     <string name="hint_add_note">Write a note</string>

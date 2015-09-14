@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.chornsby.touristtracker.R;
 import com.chornsby.touristtracker.data.TrackerContract;
 import com.chornsby.touristtracker.notes.NoteCursorAdapter;
 import com.chornsby.touristtracker.notes.NoteDetailActivity;
@@ -30,7 +31,7 @@ public class NotesFragment extends ListFragment implements LoaderManager.LoaderC
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        View rootView = inflater.inflate(R.layout.fragment_notes, container, false);
 
         mAdapter = new NoteCursorAdapter(getActivity(), null, 0);
 
