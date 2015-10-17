@@ -1,43 +1,26 @@
 package com.chornsby.touristtracker.actionbar.fragments;
 
-import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 
-import com.chornsby.touristtracker.data.TrackerService;
 import com.chornsby.touristtracker.R;
 import com.chornsby.touristtracker.Utility;
 import com.chornsby.touristtracker.data.TrackerContract;
-import com.chornsby.touristtracker.data.TrackerContract.NoteEntry;
+import com.chornsby.touristtracker.data.TrackerService;
 
-import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
-import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
-
-import org.mapsforge.core.graphics.Bitmap;
 import org.mapsforge.core.model.LatLong;
 import org.mapsforge.map.android.graphics.AndroidGraphicFactory;
 import org.mapsforge.map.android.util.AndroidUtil;
 import org.mapsforge.map.android.view.MapView;
-import org.mapsforge.map.layer.Layers;
 import org.mapsforge.map.layer.cache.TileCache;
-import org.mapsforge.map.layer.overlay.Marker;
 import org.mapsforge.map.layer.renderer.TileRendererLayer;
 import org.mapsforge.map.model.MapViewPosition;
 import org.mapsforge.map.reader.MapDataStore;
@@ -45,10 +28,6 @@ import org.mapsforge.map.reader.MapFile;
 import org.mapsforge.map.rendertheme.InternalRenderTheme;
 
 import java.io.File;
-import java.io.IOException;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -209,26 +188,6 @@ public class MapFragment extends Fragment {
     private void centerMapAtLatestLocation() {
         LatLong latLong = getLatestLatLong();
         mMapView.getModel().mapViewPosition.setCenter(latLong);
-
-        Drawable drawable = getActivity().getResources().getDrawable(R.drawable.ic_action_close_red);
-
-        if (drawable == null) return;
-
-        Bitmap marker = AndroidGraphicFactory.convertToBitmap(drawable);
-
-        Layers layers = mMapView.getLayerManager().getLayers();
-
-        // Remove the marker if it has already been placed
-        if (layers.size() == 2) {
-            layers.remove(1);
-        }
-
-        layers.add(new Marker(
-                latLong,
-                marker,
-                0,
-                -marker.getHeight() / 2
-        ));
     }
 
     private class LocationObserver extends ContentObserver {
