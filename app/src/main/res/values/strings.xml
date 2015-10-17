@@ -16,7 +16,6 @@
 
     <!-- Titles -->
     <string name="app_name">Tourist Tracker</string>
-    <string name="title_activity_first_day_survey">First day survey</string>
     <string name="title_activity_submit">Submit</string>
     <string name="title_activity_note_detail">Edit note</string>
 

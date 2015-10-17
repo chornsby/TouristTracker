@@ -64,14 +64,6 @@
         </receiver>
 
         <activity
-            android:name=".survey.FirstDaySurveyActivity"
-            android:label="@string/title_activity_first_day_survey"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.chornsby.touristtracker.MainActivity" />
-        </activity>
-        <activity
             android:name=".submit.SubmitActivity"
             android:label="@string/title_activity_submit"
             android:parentActivityName=".MainActivity" >
