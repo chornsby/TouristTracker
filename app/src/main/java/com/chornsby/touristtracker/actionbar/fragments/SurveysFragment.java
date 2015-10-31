@@ -1,18 +1,29 @@
 package com.chornsby.touristtracker.actionbar.fragments;
 
+import android.annotation.TargetApi;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.chornsby.touristtracker.R;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
+
 public class SurveysFragment extends Fragment {
 
+    private TextView applicantId;
+    private Button copy;
     private Button backgroundSurvey;
     private Button walkabilitySurvey;
 
@@ -22,10 +33,24 @@ public class SurveysFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_surveys, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_surveys, container, false);
 
+        applicantId = (TextView) rootView.findViewById(R.id.applicant_id);
+        copy = (Button) rootView.findViewById(R.id.copy);
         backgroundSurvey = (Button) rootView.findViewById(R.id.backgroundSurveyButton);
         walkabilitySurvey = (Button) rootView.findViewById(R.id.walkabilitySurveyButton);
+
+        copy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager)
+                        getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("applicant id", applicantId.getText());
+                clipboard.setPrimaryClip(clip);
+
+                Crouton.makeText(getActivity(), "Copied!", Style.CONFIRM).show();
+            }
+        });
 
         backgroundSurvey.setOnClickListener(new View.OnClickListener() {
             @Override
