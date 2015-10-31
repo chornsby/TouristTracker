@@ -37,7 +37,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.0'
     compile 'com.android.support:support-v4:23.1.0'
     compile 'com.google.android.gms:play-services-location:8.1.0'
-    compile 'net.i2p.android.ext:floatingactionbutton:1.10.0'
     compile 'org.mapsforge:mapsforge-core:0.5.1'
     compile 'org.mapsforge:mapsforge-map:0.5.1'
     compile 'org.mapsforge:mapsforge-map-android:0.5.1'

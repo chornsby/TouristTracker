@@ -3,6 +3,7 @@ package com.chornsby.touristtracker.actionbar.fragments;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -17,8 +18,6 @@ import com.chornsby.touristtracker.R;
 import com.chornsby.touristtracker.data.TrackerContract;
 import com.chornsby.touristtracker.notes.NoteCursorAdapter;
 import com.chornsby.touristtracker.notes.NoteDetailActivity;
-
-import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 
 public class NotesFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
