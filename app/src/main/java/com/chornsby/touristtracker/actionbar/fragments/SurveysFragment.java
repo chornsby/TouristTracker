@@ -1,13 +1,12 @@
 package com.chornsby.touristtracker.actionbar.fragments;
 
-import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +15,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.chornsby.touristtracker.R;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class SurveysFragment extends Fragment {
 
@@ -48,7 +44,11 @@ public class SurveysFragment extends Fragment {
                 ClipData clip = ClipData.newPlainText("applicant id", applicantId.getText());
                 clipboard.setPrimaryClip(clip);
 
-                Crouton.makeText(getActivity(), "Copied!", Style.CONFIRM).show();
+                Snackbar.make(
+                        getActivity().findViewById(R.id.pager),
+                        R.string.notif_copied_to_clipboard,
+                        Snackbar.LENGTH_SHORT
+                ).show();
             }
         });
 

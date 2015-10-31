@@ -2,6 +2,7 @@ package com.chornsby.touristtracker.submit;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,9 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.chornsby.touristtracker.R;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 
 public class SubmitActivity extends AppCompatActivity {
 
@@ -34,8 +32,10 @@ public class SubmitActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (!validateUserEmail()) {
-                    Crouton.makeText(
-                            SubmitActivity.this, R.string.email_invalid, Style.ALERT
+                    Snackbar.make(
+                            SubmitActivity.this.findViewById(R.id.submit_activity),
+                            R.string.notif_email_invalid,
+                            Snackbar.LENGTH_SHORT
                     ).show();
                     return;
                 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -15,10 +16,6 @@ import com.chornsby.touristtracker.actionbar.tabs.TabFragmentPagerAdapter;
 import com.chornsby.touristtracker.actionbar.tabs.NonDraggableViewPager;
 import com.chornsby.touristtracker.data.TrackerService;
 import com.chornsby.touristtracker.submit.SubmitActivity;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
-
 
 public class MainActivity extends ActionBarActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -150,15 +147,16 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
             boolean isTracking = sharedPreferences.getBoolean(key, true);
             updateLocationToggleIcon(isTracking);
 
-            // Cancel any existing alerts
-            Crouton.cancelAllCroutons();
+            int resourceId;
+
+            if (isTracking) {
+                resourceId = R.string.notif_tracking_started;
+            } else {
+                resourceId = R.string.notif_tracking_stopped;
+            }
 
             // Inform the user of the change
-            if (isTracking) {
-                Crouton.makeText(this, "Location tracking started.", Style.CONFIRM).show();
-            } else {
-                Crouton.makeText(this, "Location tracking stopped.", Style.ALERT).show();
-            }
+            Snackbar.make(findViewById(R.id.pager), resourceId, Snackbar.LENGTH_SHORT).show();
         }
     }
 }
