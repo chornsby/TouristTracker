@@ -61,7 +61,7 @@ public class Utility {
 
     public static LocationRequest createNewLocationRequest() {
         LocationRequest locationRequest = new LocationRequest();
-        locationRequest.setInterval(30000);
+        locationRequest.setInterval(60000);
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         return locationRequest;

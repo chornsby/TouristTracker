@@ -10,7 +10,7 @@
     <!-- Permission details -->
     <string name="permission_track_location_label">tracked location</string>
     <string name="permission_track_location_description">
-        Allows the app to track your location once every 15 seconds and store that information
+        Allows the app to track your location and store that information
         securely on your Android device.
     </string>
 

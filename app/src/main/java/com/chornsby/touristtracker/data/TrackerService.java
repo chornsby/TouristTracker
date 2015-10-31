@@ -126,7 +126,7 @@ public class TrackerService extends Service implements
                 getApplicationContext(), REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT
         );
         ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(
-                mGoogleApiClient, 30000, mTrackerIntent
+                mGoogleApiClient, 60000, mTrackerIntent
         );
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, request, mTrackerIntent
