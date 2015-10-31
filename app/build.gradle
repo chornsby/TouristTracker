@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.chornsby.touristtracker"
-        minSdkVersion 10
+        minSdkVersion 15
         multiDexEnabled true
         targetSdkVersion 23
         versionCode 14
