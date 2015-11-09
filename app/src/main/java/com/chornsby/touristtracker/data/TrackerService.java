@@ -53,12 +53,23 @@ public class TrackerService extends Service implements
 
         // Remove connection from Google Api Client
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(
-                    mGoogleApiClient, mTrackerIntent
-            );
-            LocationServices.FusedLocationApi.removeLocationUpdates(
-                    mGoogleApiClient, mTrackerIntent
-            );
+
+            try {
+                ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(
+                        mGoogleApiClient, mTrackerIntent
+                );
+            } catch (NullPointerException ignored) {
+                // The updates were killed by a user removing the location permission
+            }
+
+            try {
+                LocationServices.FusedLocationApi.removeLocationUpdates(
+                        mGoogleApiClient, mTrackerIntent
+                );
+            } catch (NullPointerException ignored) {
+                // The updates were killed by a user removing the location permission
+            }
+
             mGoogleApiClient.disconnect();
         }
 
@@ -119,6 +130,13 @@ public class TrackerService extends Service implements
 
     @Override
     public void onConnected(Bundle bundle) {
+        // Handle permission removed while tracking in progress
+        if (Utility.isLocationPermissionRequired(getApplicationContext())) {
+            setIsTracking(false);
+            stopSelf();
+            return;
+        }
+
         LocationRequest request = Utility.createNewLocationRequest();
 
         Intent intent = new Intent(this, TrackerReceiver.class);

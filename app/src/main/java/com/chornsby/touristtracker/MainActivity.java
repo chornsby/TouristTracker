@@ -1,7 +1,10 @@
 package com.chornsby.touristtracker;
 
+import android.*;
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
@@ -106,20 +109,48 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
         }
 
         if (id == R.id.action_toggle_tracking) {
-            // Create an Intent to toggle tracking
-            Intent intent = new Intent(this, TrackerService.class);
 
-            // Add Action if toggling should stop tracking
-            if (Utility.isTracking(this)) {
-                intent.setAction(TrackerService.ACTION_CLOSE);
+            if (!Utility.isTracking(this)) {
+
+                if (Utility.isLocationPermissionRequired(this)) {
+                    Utility.requestLocationPermissions(this);
+                } else {
+                    startLocationTracking();
+                }
+
+            } else {
+                stopLocationTracking();
             }
-
-            startService(intent);
 
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        for (int i = 0; i < permissions.length; i++) {
+            String permission = permissions[i];
+            boolean isGranted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
+
+            if (permission.equals(Manifest.permission.ACCESS_FINE_LOCATION) && isGranted) {
+                startLocationTracking();
+            }
+        }
+    }
+
+    private void startLocationTracking() {
+        Intent intent = new Intent(this, TrackerService.class);
+        startService(intent);
+    }
+
+    private void stopLocationTracking() {
+        Intent intent = new Intent(this, TrackerService.class);
+        intent.setAction(TrackerService.ACTION_CLOSE);
+        startService(intent);
     }
 
     private void updateLocationToggleIcon() {
