@@ -1,15 +1,20 @@
 package com.chornsby.touristtracker;
 
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.chornsby.touristtracker.data.TrackerContract.ActivityEntry;
@@ -129,7 +134,7 @@ public class Utility {
     public static boolean isTracking(Context context) {
         String TRACKING_PREFERENCE_KEY = context.getString(R.string.pref_track_location);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getBoolean(TRACKING_PREFERENCE_KEY, true);
+        return preferences.getBoolean(TRACKING_PREFERENCE_KEY, false);
     }
 
     public static File createImageFile(Context context) throws IOException {
@@ -150,5 +155,43 @@ public class Utility {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         mediaScanIntent.setData(photoUri);
         context.sendBroadcast(mediaScanIntent);
+    }
+
+    @TargetApi(23)
+    public static boolean isLocationPermissionRequired(Context context) {
+        return isPermissionRequired(context, Manifest.permission.ACCESS_FINE_LOCATION);
+    }
+
+    @TargetApi(23)
+    public static boolean isStoragePermissionRequired(Context context) {
+        final boolean isReadRequired = isPermissionRequired(context, Manifest.permission.READ_EXTERNAL_STORAGE);
+        final boolean isWriteRequired = isPermissionRequired(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        return isReadRequired || isWriteRequired;
+    }
+
+    @TargetApi(23)
+    public static void requestLocationPermissions(Activity activity) {
+        activity.requestPermissions(
+                new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
+                0
+        );
+    }
+
+    @TargetApi(23)
+    public static void requestStoragePermissions(Activity activity) {
+        activity.requestPermissions(
+                new String[] {
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                },
+                0
+        );
+    }
+
+    @TargetApi(23)
+    public static boolean isPermissionRequired(Context context, String permission) {
+        int permissionState = ContextCompat.checkSelfPermission(context, permission);
+        return permissionState != PackageManager.PERMISSION_GRANTED;
     }
 }
