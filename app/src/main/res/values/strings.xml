@@ -6,6 +6,7 @@
     <string name="map_file_name" translatable="false">helsinki.map</string>
     <string name="photo_subdirectory_path" translatable="false">/tourist_tracker</string>
     <string name="pref_track_location" translatable="false">pref_track</string>
+    <string name="pref_applicant_id" translatable="false">pref_applicant_id</string>
 
     <!-- Permission details -->
     <string name="permission_track_location_label">tracked location</string>
