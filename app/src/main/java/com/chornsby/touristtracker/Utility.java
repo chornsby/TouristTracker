@@ -179,13 +179,13 @@ public class Utility {
     }
 
     @TargetApi(23)
-    public static void requestStoragePermissions(Activity activity) {
+    public static void requestStoragePermissions(Activity activity, int requestCode) {
         activity.requestPermissions(
                 new String[] {
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 },
-                0
+                requestCode
         );
     }
 

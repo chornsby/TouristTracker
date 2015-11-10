@@ -129,15 +129,19 @@ public class NoteDetailActivity extends AppCompatActivity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Verify permissions on Android 23
-                if (Utility.isStoragePermissionRequired(NoteDetailActivity.this)) {
-                    Utility.requestStoragePermissions(NoteDetailActivity.this);
-                    return;
-                }
-
                 if (items[which].equals("Take Photo")) {
+                    // Verify permissions on Android 23
+                    if (Utility.isStoragePermissionRequired(NoteDetailActivity.this)) {
+                        Utility.requestStoragePermissions(NoteDetailActivity.this, REQUEST_CAMERA);
+                        return;
+                    }
                     takePhoto();
                 } else if (items[which].equals("Choose from Library")) {
+                    // Verify permissions on Android 23
+                    if (Utility.isStoragePermissionRequired(NoteDetailActivity.this)) {
+                        Utility.requestStoragePermissions(NoteDetailActivity.this, SELECT_PICTURE);
+                        return;
+                    }
                     choosePhoto();
                 } else {
                     dialog.dismiss();
@@ -304,7 +308,11 @@ public class NoteDetailActivity extends AppCompatActivity {
         }
 
         if (isReadGranted && isWriteGranted) {
-            takePhoto();
+            if (requestCode == REQUEST_CAMERA) {
+                takePhoto();
+            } else if (requestCode == SELECT_PICTURE) {
+                choosePhoto();
+            }
         }
     }
 
