@@ -117,7 +117,7 @@ public class Utility {
         return getFileFromAssets(context, context.getString(R.string.map_file_name));
     }
 
-    private static void copyInputStreamToFile(InputStream in, File file) throws IOException {
+    public static void copyInputStreamToFile(InputStream in, File file) throws IOException {
         OutputStream out = new FileOutputStream(file);
 
         byte[] buffer = new byte[102400]; // Buffer of 100 kb

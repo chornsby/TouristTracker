@@ -17,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -113,6 +114,12 @@ public class NoteDetailActivity extends AppCompatActivity {
         });
 
         mImageView = (ImageView) findViewById(R.id.edit_photo);
+
+        if (!TextUtils.isEmpty(mNote.imageUri)) {
+            mSelectedPhotoUri = Uri.parse(mNote.imageUri);
+            mImageView.setImageURI(null);
+            mImageView.setImageURI(mSelectedPhotoUri);
+        }
     }
 
     private void selectImage() {
@@ -122,24 +129,16 @@ public class NoteDetailActivity extends AppCompatActivity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // Verify permissions on Android 23
+                if (Utility.isStoragePermissionRequired(NoteDetailActivity.this)) {
+                    Utility.requestStoragePermissions(NoteDetailActivity.this);
+                    return;
+                }
+
                 if (items[which].equals("Take Photo")) {
                     takePhoto();
                 } else if (items[which].equals("Choose from Library")) {
-                    Intent intent = new Intent(
-                            Intent.ACTION_PICK,
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                    );
-                    intent.setType("image/*");
-
-                    if (intent.resolveActivity(getPackageManager()) == null) {
-                        Snackbar.make(
-                                findViewById(R.id.activity_note_detail),
-                                "Could not find a gallery app",
-                                Snackbar.LENGTH_SHORT
-                        ).show();
-                        return;
-                    }
-                    startActivityForResult(intent, SELECT_PICTURE);
+                    choosePhoto();
                 } else {
                     dialog.dismiss();
                 }
@@ -161,32 +160,52 @@ public class NoteDetailActivity extends AppCompatActivity {
             return;
         }
 
-        // Verify permissions on Android 23
-        if (Utility.isStoragePermissionRequired(NoteDetailActivity.this)) {
-            Utility.requestStoragePermissions(NoteDetailActivity.this);
-            return;
-        }
+        boolean isSuccess = tryCreateFileForImage();
+        if (!isSuccess) return;
 
-        // Create a file for the image
-        File imageFile;
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, mCurrentPhotoUri);
 
-        try {
-            imageFile = Utility.createImageFile(NoteDetailActivity.this);
-        } catch (IOException e) {
-            e.printStackTrace();
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    private void choosePhoto() {
+        Intent intent = new Intent(
+                Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        );
+        intent.setType("image/*");
+
+        if (intent.resolveActivity(getPackageManager()) == null) {
             Snackbar.make(
                     findViewById(R.id.activity_note_detail),
-                    "Problem saving image",
+                    "Could not find a gallery app",
                     Snackbar.LENGTH_SHORT
             ).show();
             return;
         }
 
-        mCurrentPhotoUri = Uri.fromFile(imageFile);
+        startActivityForResult(intent, SELECT_PICTURE);
+    }
 
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, mCurrentPhotoUri);
+    private Uri createFileForImage() throws IOException {
+        // Create a file for the image
+        File imageFile = Utility.createImageFile(NoteDetailActivity.this);
+        return Uri.fromFile(imageFile);
+    }
 
-        startActivityForResult(intent, REQUEST_CAMERA);
+    private boolean tryCreateFileForImage() {
+        try {
+            mCurrentPhotoUri = createFileForImage();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Snackbar.make(
+                    findViewById(R.id.activity_note_detail),
+                    "Problem finding storage for the image",
+                    Snackbar.LENGTH_SHORT
+            ).show();
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -210,6 +229,45 @@ public class NoteDetailActivity extends AppCompatActivity {
         }
 
         InputStream imageStream;
+
+        try {
+            imageStream = getContentResolver().openInputStream(mSelectedPhotoUri);
+        } catch (FileNotFoundException e) {
+            Snackbar.make(
+                    findViewById(R.id.activity_note_detail),
+                    "Could not access the image",
+                    Snackbar.LENGTH_SHORT
+            );
+            return;
+        }
+
+        if (requestCode == SELECT_PICTURE) {
+            File imageFile;
+
+            try {
+                imageFile = Utility.createImageFile(NoteDetailActivity.this);
+            } catch (IOException e) {
+                Snackbar.make(
+                        findViewById(R.id.activity_note_detail),
+                        "Problem finding storage for the image",
+                        Snackbar.LENGTH_SHORT
+                ).show();
+                return;
+            }
+
+            try {
+                Utility.copyInputStreamToFile(imageStream, imageFile);
+            } catch (IOException e) {
+                Snackbar.make(
+                        findViewById(R.id.activity_note_detail),
+                        "Problem finding storage for the image",
+                        Snackbar.LENGTH_SHORT
+                ).show();
+                return;
+            }
+
+            mSelectedPhotoUri = Uri.fromFile(imageFile);
+        }
 
         try {
             imageStream = getContentResolver().openInputStream(mSelectedPhotoUri);
@@ -264,9 +322,9 @@ public class NoteDetailActivity extends AppCompatActivity {
         super.onPause();
         mNote.note = mEditText.getText().toString();
 
-//        if (mSelectedPhotoUri != null) {
-//            mNote.imageUri = mSelectedPhotoUri.toString();
-//        }
+        if (mSelectedPhotoUri != null) {
+            mNote.imageUri = mSelectedPhotoUri.toString();
+        }
 
         getContentResolver().update(
                 TrackerContract.NoteEntry.CONTENT_URI,

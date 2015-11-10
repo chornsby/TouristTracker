@@ -63,6 +63,7 @@ public class TrackerContract {
 
         public static final String COLUMN_TIME = "time";
         public static final String COLUMN_TEXT = "text";
+        public static final String COLUMN_IMAGE_URI = "imageuri";
 
         public static Uri buildNoteUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
