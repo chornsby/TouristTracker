@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.util.Log;
 
 import com.chornsby.touristtracker.data.TrackerContract.ActivityEntry;
 import com.chornsby.touristtracker.data.TrackerContract.LocationEntry;
+import com.google.android.gms.common.api.Api;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.location.LocationRequest;
@@ -157,17 +159,18 @@ public class Utility {
         context.sendBroadcast(mediaScanIntent);
     }
 
-    @TargetApi(23)
     public static boolean isLocationPermissionRequired(Context context) {
         return isPermissionRequired(context, Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
-    @TargetApi(23)
     public static boolean isStoragePermissionRequired(Context context) {
-        final boolean isReadRequired = isPermissionRequired(context, Manifest.permission.READ_EXTERNAL_STORAGE);
-        final boolean isWriteRequired = isPermissionRequired(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        return isReadRequired || isWriteRequired;
+        if (Build.VERSION.SDK_INT > 15) {
+            final boolean isReadRequired = isPermissionRequired(context, Manifest.permission.READ_EXTERNAL_STORAGE);
+            final boolean isWriteRequired = isPermissionRequired(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            return isReadRequired || isWriteRequired;
+        } else {
+            return isPermissionRequired(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
     }
 
     @TargetApi(23)
@@ -189,7 +192,6 @@ public class Utility {
         );
     }
 
-    @TargetApi(23)
     public static boolean isPermissionRequired(Context context, String permission) {
         int permissionState = ContextCompat.checkSelfPermission(context, permission);
         return permissionState != PackageManager.PERMISSION_GRANTED;
