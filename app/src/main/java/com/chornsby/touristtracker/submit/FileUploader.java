@@ -30,11 +30,12 @@ public class FileUploader {
     private static final String SERVICE_ACCOUNT_EMAIL = Secrets.SERVICE_ACCOUNT_EMAIL;
 
     public static boolean tryUploadFile(Context context, File file, String userEmail) {
+        Log.d(LOG_TAG, "Uploading file: " + file.getName());
         try {
             uploadFile(context, file, userEmail);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e(LOG_TAG, "Problem uploading file");
+            Log.e(LOG_TAG, "Problem uploading file: " + file.getName());
             return false;
         }
         return true;

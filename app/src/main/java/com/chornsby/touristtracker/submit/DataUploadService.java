@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -118,9 +119,16 @@ public class DataUploadService extends IntentService {
             Log.e(LOG_TAG, "Error uploading notes.json");
         }
 
-        FileUploader.tryUploadFile(this, activityFile, mUserEmail);
-        FileUploader.tryUploadFile(this, locationFile, mUserEmail);
-        FileUploader.tryUploadFile(this, notesFile, mUserEmail);
+        success = success && FileUploader.tryUploadFile(this, activityFile, mUserEmail);
+        success = success && FileUploader.tryUploadFile(this, locationFile, mUserEmail);
+        success = success && FileUploader.tryUploadFile(this, notesFile, mUserEmail);
+
+        File photoDirectory = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES + getString(R.string.photo_subdirectory_path)
+        );
+        for (File photoFile: photoDirectory.listFiles()) {
+            FileUploader.tryUploadFile(this, photoFile, mUserEmail);
+        }
 
         return success;
     }
