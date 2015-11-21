@@ -8,12 +8,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.chornsby.touristtracker.MainActivity;
 import com.chornsby.touristtracker.R;
+import com.chornsby.touristtracker.Utility;
 
 import java.io.File;
 
@@ -35,6 +37,8 @@ public class DataUploadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Utility.setIsUploading(this, true);
+
         mUserEmail = intent.getStringExtra(EXTRA_USER_EMAIL);
 
         NotificationManager notificationManager =
@@ -76,6 +80,8 @@ public class DataUploadService extends IntentService {
         // Update the notification
         notificationManager.notify(NOTIFICATION_ID, builder.build());
         sendToastToMainThread(notificationText);
+
+        Utility.setIsUploading(this, false);
 
         if (success) {
             // Prompt the user to uninstall the app
@@ -126,7 +132,14 @@ public class DataUploadService extends IntentService {
         File photoDirectory = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES + getString(R.string.photo_subdirectory_path)
         );
-        for (File photoFile: photoDirectory.listFiles()) {
+
+        final File[] files = photoDirectory.listFiles();
+
+        if (files == null) {
+            return success;
+        }
+
+        for (File photoFile: files) {
             FileUploader.tryUploadFile(this, photoFile, mUserEmail);
         }
 

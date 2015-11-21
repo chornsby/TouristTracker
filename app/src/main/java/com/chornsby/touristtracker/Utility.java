@@ -139,6 +139,19 @@ public class Utility {
         return preferences.getBoolean(TRACKING_PREFERENCE_KEY, false);
     }
 
+    public static boolean isUploading(Context context) {
+        String UPLOADING_PREFERENCE_KEY = context.getString(R.string.pref_uploading_data);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getBoolean(UPLOADING_PREFERENCE_KEY, false);
+    }
+
+    public static void setIsUploading(Context context, boolean isUploading) {
+        String UPLOADING_PREFERENCE_KEY = context.getString(R.string.pref_uploading_data);
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putBoolean(UPLOADING_PREFERENCE_KEY, isUploading);
+        editor.apply();
+    }
+
     public static File createImageFile(Context context) throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(new Date());
         File storageDir = Environment.getExternalStoragePublicDirectory(

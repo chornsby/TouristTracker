@@ -2,6 +2,8 @@ package com.chornsby.touristtracker.submit;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.chornsby.touristtracker.R;
+import com.chornsby.touristtracker.Utility;
 
-public class SubmitActivity extends AppCompatActivity {
+public class SubmitActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 
     private EditText mEmailEditText;
     private Button mSubmitButton;
@@ -26,6 +29,7 @@ public class SubmitActivity extends AppCompatActivity {
 
         mEmailEditText = (EditText) findViewById(R.id.user_email_edit_text);
         mSubmitButton = (Button) findViewById(R.id.button);
+        mSubmitButton.setEnabled(!Utility.isUploading(this));
 
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +58,17 @@ public class SubmitActivity extends AppCompatActivity {
                 builder.show();
             }
         });
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     private boolean validateUserEmail() {
@@ -72,5 +87,13 @@ public class SubmitActivity extends AppCompatActivity {
         Intent fileUpload = new Intent(this, DataUploadService.class);
         fileUpload.putExtra(DataUploadService.EXTRA_USER_EMAIL, userEmail);
         startService(fileUpload);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_uploading_data))) {
+            boolean isUploading = sharedPreferences.getBoolean(key, false);
+            mSubmitButton.setEnabled(!isUploading);
+        }
     }
 }
