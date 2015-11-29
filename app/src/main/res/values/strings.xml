@@ -45,6 +45,7 @@
     <string name="action_submit_data">Submit data</string>
     <string name="action_upload">Upload</string>
     <string name="action_discard">Discard</string>
+    <string name="action_display_help">Help</string>
 
     <!-- Notes -->
     <string name="label_add_note">Note</string>

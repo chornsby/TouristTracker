@@ -84,6 +84,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.chornsby.touristtracker.MainActivity" />
         </activity>
+        <activity
+            android:name=".TutorialActivity"
+            android:label="Help"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

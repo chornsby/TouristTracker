@@ -108,6 +108,11 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
             return true;
         }
 
+        if (id == R.id.action_launch_tutorial) {
+            startActivity(new Intent(this, TutorialActivity.class));
+            return true;
+        }
+
         if (id == R.id.action_toggle_tracking) {
 
             if (!Utility.isTracking(this)) {

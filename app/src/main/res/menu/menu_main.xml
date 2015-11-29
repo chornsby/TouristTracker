@@ -15,4 +15,9 @@
         android:orderInCategory="100"
         app:showAsAction="ifRoom" />
 
+    <item android:id="@+id/action_launch_tutorial"
+        android:title="@string/action_display_help"
+        android:orderInCategory="150"
+        app:showAsAction="never" />
+
 </menu>
