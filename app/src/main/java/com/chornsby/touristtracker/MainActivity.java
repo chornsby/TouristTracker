@@ -1,6 +1,5 @@
 package com.chornsby.touristtracker;
 
-import android.*;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -72,7 +71,7 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
                 .setTabListener(tabListener));
 
         actionBar.addTab(actionBar.newTab()
-                .setText(getString(R.string.tab_label_surveys).toUpperCase())
+                .setText(getString(R.string.tab_label_survey).toUpperCase())
                 .setTabListener(tabListener));
     }
 

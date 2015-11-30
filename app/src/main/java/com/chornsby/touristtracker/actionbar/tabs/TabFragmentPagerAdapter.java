@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.chornsby.touristtracker.actionbar.fragments.MapFragment;
 import com.chornsby.touristtracker.actionbar.fragments.NotesFragment;
-import com.chornsby.touristtracker.actionbar.fragments.SurveysFragment;
+import com.chornsby.touristtracker.actionbar.fragments.SurveyFragment;
 
 public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
 
@@ -26,7 +26,7 @@ public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
             case NOTES_FRAGMENT:
                 return new NotesFragment();
             case SURVEY_FRAGMENT:
-                return new SurveysFragment();
+                return new SurveyFragment();
         }
         throw new IllegalArgumentException("Tab position out of range");
     }

@@ -20,14 +20,13 @@ import com.chornsby.touristtracker.R;
 
 import java.util.Random;
 
-public class SurveysFragment extends Fragment {
+public class SurveyFragment extends Fragment {
 
-    private TextView mApplicantId;
+    private TextView mParticipantId;
     private Button copy;
-    private Button backgroundSurvey;
-    private Button walkabilitySurvey;
+    private Button respondButton;
 
-    public SurveysFragment() {}
+    public SurveyFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,10 +34,9 @@ public class SurveysFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_surveys, container, false);
 
-        mApplicantId = (TextView) rootView.findViewById(R.id.applicant_id);
+        mParticipantId = (TextView) rootView.findViewById(R.id.participant_id);
         copy = (Button) rootView.findViewById(R.id.copy);
-        backgroundSurvey = (Button) rootView.findViewById(R.id.backgroundSurveyButton);
-        walkabilitySurvey = (Button) rootView.findViewById(R.id.walkabilitySurveyButton);
+        respondButton = (Button) rootView.findViewById(R.id.response_button);
 
         setApplicantId();
 
@@ -47,7 +45,7 @@ public class SurveysFragment extends Fragment {
             public void onClick(View v) {
                 ClipboardManager clipboard = (ClipboardManager)
                         getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("applicant id", mApplicantId.getText());
+                ClipData clip = ClipData.newPlainText("participant_id", mParticipantId.getText());
                 clipboard.setPrimaryClip(clip);
 
                 Snackbar.make(
@@ -58,16 +56,10 @@ public class SurveysFragment extends Fragment {
             }
         });
 
-        backgroundSurvey.setOnClickListener(new View.OnClickListener() {
+        respondButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openWebPage("https://elomake.helsinki.fi/lomakkeet/63793/lomake.html");
-            }
-        });
-        walkabilitySurvey.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openWebPage("https://elomake.helsinki.fi/lomakkeet/63802/lomake.html");
+                openWebPage("https://elomake.helsinki.fi/lomakkeet/65716/lomake.html");
             }
         });
 
@@ -97,6 +89,6 @@ public class SurveysFragment extends Fragment {
             editor.apply();
         }
 
-        mApplicantId.setText(Integer.toString(applicantId));
+        mParticipantId.setText(Integer.toString(applicantId));
     }
 }

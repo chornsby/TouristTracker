@@ -24,7 +24,7 @@
     <!-- Tab labels -->
     <string name="tab_label_map">Map</string>
     <string name="tab_label_notes">Notes</string>
-    <string name="tab_label_surveys">Surveys</string>
+    <string name="tab_label_survey">Survey</string>
 
     <!-- Notifications -->
     <string name="notif_text_tracking">Currently tracking your location</string>
@@ -33,7 +33,7 @@
     <string name="notif_text_upload_failure">Data upload failed</string>
     <string name="notif_tracking_started">Location tracking started</string>
     <string name="notif_tracking_stopped">Location tracking stopped</string>
-    <string name="notif_copied_to_clipboard">Applicant ID copied</string>
+    <string name="notif_copied_to_clipboard">Participant ID copied</string>
     <string name="notif_email_invalid">Email address invalid</string>
 
     <!-- Actions -->
@@ -62,5 +62,10 @@
     <string name="confirm_data_upload">Are you ready to upload your location data?</string>
     <string name="confirm_data_upload_extra">Ensure you are connected to WIFI to avoid data charges</string>
     <string name="hint_add_email">Email address</string>
+    <string name="survey_description">
+        With this survey we would like to find out about your background and your experiences
+        walking and using public transport as tourists. Please note that your answers are strictly
+        confidential.
+    </string>
 
 </resources>
