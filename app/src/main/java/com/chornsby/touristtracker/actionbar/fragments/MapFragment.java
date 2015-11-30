@@ -1,11 +1,9 @@
 package com.chornsby.touristtracker.actionbar.fragments;
 
 import android.content.Intent;
-import android.database.ContentObserver;
-import android.database.Cursor;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +11,6 @@ import android.view.ViewGroup;
 
 import com.chornsby.touristtracker.R;
 import com.chornsby.touristtracker.Utility;
-import com.chornsby.touristtracker.data.TrackerContract;
 import com.chornsby.touristtracker.data.TrackerService;
 
 import org.mapsforge.core.model.LatLong;
@@ -29,18 +26,17 @@ import org.mapsforge.map.rendertheme.InternalRenderTheme;
 
 import java.io.File;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class MapFragment extends Fragment {
 
     private static final String LOG_TAG = MapFragment.class.getSimpleName();
 
+    private static final String PREF_MAP_LATITUDE = "pref_map_latitude";
+    private static final String PREF_MAP_LONGITUDE = "pref_map_longitude";
+    private static final String PREF_MAP_ZOOM_LEVEL = "pref_map_zoom_level";
+
     private MapView mMapView;
     private TileCache mTileCache;
     private TileRendererLayer mTileRendererLayer;
-
-    private LocationObserver mLocationObserver;
 
     public MapFragment() {
     }
@@ -64,9 +60,7 @@ public class MapFragment extends Fragment {
         mMapView.setBuiltInZoomControls(false);
         mMapView.getMapScaleBar().setVisible(true);
 
-        MapViewPosition mapViewPosition = mMapView.getModel().mapViewPosition;
-
-        mapViewPosition.setZoomLevel((byte) 16);
+        loadMapViewPosition();
 
         mTileCache = AndroidUtil.createTileCache(
                 getActivity(),
@@ -108,23 +102,13 @@ public class MapFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        mLocationObserver = new LocationObserver(new Handler());
-
-        getActivity().getContentResolver().registerContentObserver(
-                TrackerContract.BASE_CONTENT_URI, true, mLocationObserver
-        );
-
-        centerMapAtLatestLocation();
+        loadMapViewPosition();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
-        getActivity().getContentResolver().unregisterContentObserver(mLocationObserver);
-
-        mLocationObserver = null;
+        saveMapViewPosition();
     }
 
     @Override
@@ -143,64 +127,32 @@ public class MapFragment extends Fragment {
         AndroidGraphicFactory.clearResourceMemoryCache();
     }
 
-    private LatLong getLatestLatLong() {
-        // Retrieve relevant records from the database
-        Uri uri = TrackerContract.LocationEntry.CONTENT_URI;
-        String[] projection = {
-                TrackerContract.LocationEntry.COLUMN_LATITUDE,
-                TrackerContract.LocationEntry.COLUMN_LONGITUDE,
-                TrackerContract.LocationEntry.COLUMN_ACCURACY,
-        };
+    private void loadMapViewPosition() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        Cursor c = getActivity().getContentResolver().query(
-                uri,
-                projection,
-                null,
-                null,
-                null
-        );
+        double latitude = preferences.getFloat(PREF_MAP_LATITUDE, 60.1708f);
+        double longitude = preferences.getFloat(PREF_MAP_LONGITUDE, 24.9375f);
+        byte zoomLevel = (byte) preferences.getInt(PREF_MAP_ZOOM_LEVEL, 16);
 
-        final int LATITUDE_INDEX = c.getColumnIndex(TrackerContract.LocationEntry.COLUMN_LATITUDE);
-        final int LONGITUDE_INDEX = c.getColumnIndex(TrackerContract.LocationEntry.COLUMN_LONGITUDE);
+        LatLong latLong = new LatLong(latitude, longitude);
 
-        LatLong latLong;
-        double latitude;
-        double longitude;
-
-        // Use latest stored data
-        if (c.moveToLast()) {
-            latitude = c.getDouble(LATITUDE_INDEX);
-            longitude = c.getDouble(LONGITUDE_INDEX);
-
-        // Or the coordinates for Helsinki
-        } else {
-            latitude = 60.1708;
-            longitude = 24.9375;
-        }
-
-        latLong = new LatLong(latitude, longitude);
-
-        c.close();
-
-        return latLong;
+        MapViewPosition mapViewPosition = mMapView.getModel().mapViewPosition;
+        mapViewPosition.setCenter(latLong);
+        mapViewPosition.setZoomLevel(zoomLevel);
     }
 
-    private void centerMapAtLatestLocation() {
-        LatLong latLong = getLatestLatLong();
-        mMapView.getModel().mapViewPosition.setCenter(latLong);
-    }
+    private void saveMapViewPosition() {
+        MapViewPosition mapViewPosition = mMapView.getModel().mapViewPosition;
 
-    private class LocationObserver extends ContentObserver {
+        LatLong latLong = mapViewPosition.getCenter();
+        byte zoomLevel = mapViewPosition.getZoomLevel();
 
-        public LocationObserver(Handler handler) {
-            super(handler);
-        }
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
 
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
+        editor.putFloat(PREF_MAP_LATITUDE, (float) latLong.latitude);
+        editor.putFloat(PREF_MAP_LONGITUDE, (float) latLong.longitude);
+        editor.putInt(PREF_MAP_ZOOM_LEVEL, (int) zoomLevel);
 
-            centerMapAtLatestLocation();
-        }
+        editor.apply();
     }
 }
