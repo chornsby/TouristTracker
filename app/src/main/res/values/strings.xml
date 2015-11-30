@@ -52,6 +52,8 @@
     <string name="label_add_photo">Photo</string>
     <string name="hint_add_note">Write a note</string>
     <string name="note_saved">Note saved</string>
+    <string name="no_notes_available">You haven\'t added any notes yet</string>
+
 
     <!-- Submit -->
     <string name="label_submit_data">
