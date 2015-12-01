@@ -18,13 +18,13 @@ public class TutorialActivity extends AppIntro {
         addSlide(AppIntroFragment.newInstance(
                 "Welcome",
                 "Here is a message from the researcher (video coming soon!)",
-                R.drawable.ic_instructor,
+                R.drawable.ic_video,
                 MATERIAL_INDIGO
         ));
         addSlide(AppIntroFragment.newInstance(
                 "Tracking",
                 "Tap the location button to turn location tracking on and off whenever you like",
-                R.drawable.ic_world,
+                R.drawable.ic_location,
                 MATERIAL_INDIGO
         ));
         addSlide(AppIntroFragment.newInstance(
