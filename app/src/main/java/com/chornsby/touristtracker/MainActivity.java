@@ -31,6 +31,15 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
         super.onCreate(savedInstanceState);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String prefTutorialFinished = getString(R.string.pref_tutorial_finished);
+        boolean isTutorialFinished = preferences.getBoolean(prefTutorialFinished, false);
+
+        if (!isTutorialFinished) {
+            Intent intent = new Intent(this, TutorialActivity.class);
+            startActivity(intent);
+        }
+
         preferences.registerOnSharedPreferenceChangeListener(this);
 
         setContentView(R.layout.activity_main);

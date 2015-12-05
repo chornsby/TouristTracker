@@ -1,8 +1,11 @@
 package com.chornsby.touristtracker;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
 import com.github.paolorotolo.appintro.AppIntro;
@@ -72,7 +75,16 @@ public class TutorialActivity extends AppIntro {
     }
 
     private void launchMainActivity() {
+        setTutorialFinished();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
+    }
+
+    private void setTutorialFinished() {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        String prefTutorialFinished = getString(R.string.pref_tutorial_finished);
+        editor.putBoolean(prefTutorialFinished, true);
+        editor.apply();
     }
 }

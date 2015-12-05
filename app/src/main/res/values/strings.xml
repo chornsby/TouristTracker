@@ -8,6 +8,7 @@
     <string name="pref_track_location" translatable="false">pref_track</string>
     <string name="pref_uploading_data" translatable="false">pref_uploading_data</string>
     <string name="pref_applicant_id" translatable="false">pref_applicant_id</string>
+    <string name="pref_tutorial_finished" translatable="false">pref_tutorial_finished</string>
 
     <!-- Permission details -->
     <string name="permission_track_location_label">tracked location</string>
