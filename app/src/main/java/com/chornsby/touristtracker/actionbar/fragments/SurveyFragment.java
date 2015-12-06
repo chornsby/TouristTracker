@@ -22,7 +22,7 @@ import java.util.Random;
 
 public class SurveyFragment extends Fragment {
 
-    private TextView mParticipantId;
+    private TextView mResearchNumber;
     private Button copy;
     private Button respondButton;
 
@@ -34,7 +34,7 @@ public class SurveyFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_surveys, container, false);
 
-        mParticipantId = (TextView) rootView.findViewById(R.id.participant_id);
+        mResearchNumber = (TextView) rootView.findViewById(R.id.research_number);
         copy = (Button) rootView.findViewById(R.id.copy);
         respondButton = (Button) rootView.findViewById(R.id.response_button);
 
@@ -45,7 +45,7 @@ public class SurveyFragment extends Fragment {
             public void onClick(View v) {
                 ClipboardManager clipboard = (ClipboardManager)
                         getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("participant_id", mParticipantId.getText());
+                ClipData clip = ClipData.newPlainText("research_number", mResearchNumber.getText());
                 clipboard.setPrimaryClip(clip);
 
                 Snackbar.make(
@@ -89,6 +89,6 @@ public class SurveyFragment extends Fragment {
             editor.apply();
         }
 
-        mParticipantId.setText(Integer.toString(applicantId));
+        mResearchNumber.setText(Integer.toString(applicantId));
     }
 }

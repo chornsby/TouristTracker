@@ -27,10 +27,17 @@
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Your Participant ID:"/>
+                    android:text="Research number"/>
 
                 <TextView
-                    android:id="@+id/participant_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="You will need to paste this into the top of the survey to identify yourself"/>
+
+                <TextView
+                    android:id="@+id/research_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -67,6 +74,14 @@
                     android:textStyle="bold"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/tab_label_survey"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/tt_secondary"
+                    android:text="@string/internet_connection_required" />
 
                 <TextView
                     android:layout_width="wrap_content"

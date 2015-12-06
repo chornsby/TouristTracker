@@ -34,7 +34,7 @@
     <string name="notif_text_upload_failure">Data upload failed</string>
     <string name="notif_tracking_started">Location tracking started</string>
     <string name="notif_tracking_stopped">Location tracking stopped</string>
-    <string name="notif_copied_to_clipboard">Participant ID copied</string>
+    <string name="notif_copied_to_clipboard">Research number copied</string>
     <string name="notif_email_invalid">Email address invalid</string>
 
     <!-- Actions -->
@@ -67,6 +67,11 @@
         With this survey we would like to find out about your background and your experiences
         walking and using public transport as tourists. Please note that your answers are strictly
         confidential.
+    </string>
+
+    <!-- General -->
+    <string name="internet_connection_required">
+        You will need an internet connection to complete this part of the study.
     </string>
 
 </resources>
