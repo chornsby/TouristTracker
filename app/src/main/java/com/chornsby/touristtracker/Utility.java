@@ -20,7 +20,6 @@ import android.util.Log;
 
 import com.chornsby.touristtracker.data.TrackerContract.ActivityEntry;
 import com.chornsby.touristtracker.data.TrackerContract.LocationEntry;
-import com.google.android.gms.common.api.Api;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.location.LocationRequest;
@@ -34,6 +33,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 public class Utility {
 
@@ -208,5 +208,23 @@ public class Utility {
     public static boolean isPermissionRequired(Context context, String permission) {
         int permissionState = ContextCompat.checkSelfPermission(context, permission);
         return permissionState != PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static int getResearchNumber(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        int researchNumber = sharedPreferences.getInt(context.getString(R.string.pref_applicant_id), 0);
+        boolean isUnset = researchNumber == 0;
+
+        if (isUnset) {
+            Random r = new Random();
+            researchNumber = r.nextInt(10000) + 10000;
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt(context.getString(R.string.pref_applicant_id), researchNumber);
+            editor.apply();
+        }
+
+        return researchNumber;
     }
 }

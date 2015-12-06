@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.chornsby.touristtracker.R;
@@ -20,7 +21,12 @@ import com.chornsby.touristtracker.Utility;
 public class SubmitActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
 
     private EditText mEmailEditText;
+    private CheckBox mConfirmParticipationLottery;
+    private CheckBox mConfirmParticipationTAK;
     private Button mSubmitButton;
+
+    private static final String CONFIRM_PARTICIPATION_LOTTERY = "confirm_participation_lottery";
+    private static final String CONFIRM_PARTICIPATION_TAK = "confirm_participation_tak";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +34,15 @@ public class SubmitActivity extends AppCompatActivity implements SharedPreferenc
         setContentView(R.layout.activity_submit);
 
         mEmailEditText = (EditText) findViewById(R.id.user_email_edit_text);
+        mConfirmParticipationLottery = (CheckBox) findViewById(R.id.confirm_participation_lottery);
+        mConfirmParticipationTAK = (CheckBox) findViewById(R.id.confirm_participation_tak);
         mSubmitButton = (Button) findViewById(R.id.button);
-        mSubmitButton.setEnabled(!Utility.isUploading(this));
+
+        final boolean isUploading = Utility.isUploading(this);
+
+        mConfirmParticipationLottery.setEnabled(!isUploading);
+        mConfirmParticipationTAK.setEnabled(!isUploading);
+        mSubmitButton.setEnabled(!isUploading);
 
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +77,20 @@ public class SubmitActivity extends AppCompatActivity implements SharedPreferenc
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(CONFIRM_PARTICIPATION_LOTTERY, mConfirmParticipationLottery.isChecked());
+        outState.putBoolean(CONFIRM_PARTICIPATION_TAK, mConfirmParticipationTAK.isChecked());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mConfirmParticipationLottery.setChecked(savedInstanceState.getBoolean(CONFIRM_PARTICIPATION_LOTTERY, false));
+        mConfirmParticipationTAK.setChecked(savedInstanceState.getBoolean(CONFIRM_PARTICIPATION_TAK, false));
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 
@@ -83,9 +110,13 @@ public class SubmitActivity extends AppCompatActivity implements SharedPreferenc
 
     private void startUploadService() {
         String userEmail = mEmailEditText.getText().toString();
+        boolean participateLottery = mConfirmParticipationLottery.isChecked();
+        boolean participateTAK = mConfirmParticipationTAK.isChecked();
 
         Intent fileUpload = new Intent(this, DataUploadService.class);
         fileUpload.putExtra(DataUploadService.EXTRA_USER_EMAIL, userEmail);
+        fileUpload.putExtra(DataUploadService.EXTRA_PARTICIPATE_LOTTERY, participateLottery);
+        fileUpload.putExtra(DataUploadService.EXTRA_PARTICIPATE_TAK, participateTAK);
         startService(fileUpload);
     }
 

@@ -1,6 +1,7 @@
 package com.chornsby.touristtracker.submit;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 
@@ -34,6 +35,26 @@ public class JsonGenerator {
     public static File generateNotesJsonFile(Context context) throws IOException, JSONException {
         JSONArray jsonArray = generateNotesJSON(context);
         return generateFile(context, jsonArray, "notes.json");
+    }
+
+    public static File generateGeneralJsonFile(Context context, Intent intent) throws IOException, JSONException {
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+
+        String emailAddress = intent.getStringExtra(DataUploadService.EXTRA_USER_EMAIL);
+        if (emailAddress == null) emailAddress = "";
+
+        boolean participateLottery = intent.getBooleanExtra(DataUploadService.EXTRA_PARTICIPATE_LOTTERY, false);
+        boolean participateTAK = intent.getBooleanExtra(DataUploadService.EXTRA_PARTICIPATE_TAK, false);
+        int researchNumber = Utility.getResearchNumber(context);
+
+        jsonObject.put("email_address", emailAddress);
+        jsonObject.put("agreed_to_participate_in_lottery", participateLottery);
+        jsonObject.put("agreed_to_share_email_with_tak", participateTAK);
+        jsonObject.put("research_number", researchNumber);
+        jsonArray.put(jsonObject);
+
+        return generateFile(context, jsonArray, "general.json");
     }
 
     private static File generateFile(Context context, JSONArray jsonArray, String filename) throws IOException {

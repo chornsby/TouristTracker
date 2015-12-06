@@ -41,6 +41,22 @@
             android:id="@+id/user_email_edit_text"
             android:hint="@string/hint_add_email" />
 
+        <CheckBox
+            android:id="@+id/confirm_participation_lottery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacer_margin"
+            android:text="@string/confirm_participation_lottery"
+            android:saveEnabled="false" />
+
+        <CheckBox
+            android:id="@+id/confirm_participation_tak"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacer_margin"
+            android:text="@string/confirm_participation_tak"
+            android:saveEnabled="false" />
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -68,6 +68,9 @@
         walking and using public transport as tourists. Please note that your answers are strictly
         confidential.
     </string>
+    <string name="confirm_participation_lottery">I would like to participate in the lottery to win 100 € accommodation gift card</string>
+    <string name="confirm_participation_tak">I would like my email to be shared for further research purposes with our partners (TAK Oy)</string>
+
 
     <!-- General -->
     <string name="internet_connection_required">

@@ -4,10 +4,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,8 +15,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.chornsby.touristtracker.R;
-
-import java.util.Random;
+import com.chornsby.touristtracker.Utility;
 
 public class SurveyFragment extends Fragment {
 
@@ -38,7 +35,8 @@ public class SurveyFragment extends Fragment {
         copy = (Button) rootView.findViewById(R.id.copy);
         respondButton = (Button) rootView.findViewById(R.id.response_button);
 
-        setApplicantId();
+        int researchNumber = Utility.getResearchNumber(getContext());
+        mResearchNumber.setText(Integer.toString(researchNumber));
 
         copy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,23 +70,5 @@ public class SurveyFragment extends Fragment {
         if (intent.resolveActivity(getContext().getPackageManager()) != null) {
             startActivity(intent);
         }
-    }
-
-    private void setApplicantId() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-
-        int applicantId = sharedPreferences.getInt(getContext().getString(R.string.pref_applicant_id), 0);
-        boolean isUnset = applicantId == 0;
-
-        if (isUnset) {
-            Random r = new Random();
-            applicantId = r.nextInt(10000) + 10000;
-
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getContext()).edit();
-            editor.putInt(getString(R.string.pref_applicant_id), applicantId);
-            editor.apply();
-        }
-
-        mResearchNumber.setText(Integer.toString(applicantId));
     }
 }

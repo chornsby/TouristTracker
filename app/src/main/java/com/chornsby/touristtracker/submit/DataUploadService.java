@@ -24,6 +24,8 @@ import java.util.List;
 public class DataUploadService extends IntentService {
 
     public static final String EXTRA_USER_EMAIL = "user_email";
+    public static final String EXTRA_PARTICIPATE_LOTTERY = "participate_lottery";
+    public static final String EXTRA_PARTICIPATE_TAK = "participate_tak";
 
     private static final String LOG_TAG = DataUploadService.class.getSimpleName();
     private static final String WORKER_THREAD = DataUploadService.class.getSimpleName();
@@ -63,7 +65,7 @@ public class DataUploadService extends IntentService {
         sendToastToMainThread(notificationText);
 
         // Perform the data upload
-        boolean success = uploadData();
+        boolean success = uploadData(intent);
 
         // Finish progress
         builder.setProgress(0, 0, false);
@@ -94,13 +96,14 @@ public class DataUploadService extends IntentService {
         }
     }
 
-    private boolean uploadData() {
+    private boolean uploadData(Intent intent) {
         // Assume that everything works until proven wrong
         boolean success = true;
 
         File activityFile = null;
         File locationFile = null;
         File notesFile = null;
+        File generalFile = null;
 
         // Upload the user data to the server
         try {
@@ -127,9 +130,18 @@ public class DataUploadService extends IntentService {
             Log.e(LOG_TAG, "Error uploading notes.json");
         }
 
+        try {
+            generalFile = JsonGenerator.generateGeneralJsonFile(this, intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            success = false;
+            Log.e(LOG_TAG, "Error uploading general.json");
+        }
+
         success = success && FileUploader.tryUploadFile(this, activityFile, mUserEmail);
         success = success && FileUploader.tryUploadFile(this, locationFile, mUserEmail);
         success = success && FileUploader.tryUploadFile(this, notesFile, mUserEmail);
+        success = success && FileUploader.tryUploadFile(this, generalFile, mUserEmail);
 
         final List<File> files = getPhotos();
 
