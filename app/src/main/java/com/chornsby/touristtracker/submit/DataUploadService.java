@@ -5,10 +5,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -16,8 +15,11 @@ import android.widget.Toast;
 import com.chornsby.touristtracker.MainActivity;
 import com.chornsby.touristtracker.R;
 import com.chornsby.touristtracker.Utility;
+import com.chornsby.touristtracker.data.TrackerContract.NoteEntry;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataUploadService extends IntentService {
 
@@ -129,21 +131,46 @@ public class DataUploadService extends IntentService {
         success = success && FileUploader.tryUploadFile(this, locationFile, mUserEmail);
         success = success && FileUploader.tryUploadFile(this, notesFile, mUserEmail);
 
-        File photoDirectory = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES + getString(R.string.photo_subdirectory_path)
-        );
-
-        final File[] files = photoDirectory.listFiles();
-
-        if (files == null) {
-            return success;
-        }
+        final List<File> files = getPhotos();
 
         for (File photoFile: files) {
             FileUploader.tryUploadFile(this, photoFile, mUserEmail);
         }
 
         return success;
+    }
+
+    private List<File> getPhotos() {
+        List<File> photos = new ArrayList<>();
+
+        Uri uri = NoteEntry.CONTENT_URI;
+        Cursor cursor = getContentResolver().query(
+                uri,
+                new String[] {NoteEntry.COLUMN_IMAGE_URI},
+                null,
+                null,
+                null
+        );
+
+        if (cursor == null) {
+            return photos;
+        }
+
+        final int INDEX_IMAGE_URI = cursor.getColumnIndex(NoteEntry.COLUMN_IMAGE_URI);
+
+        while (cursor.moveToNext()) {
+            String imageUriString = cursor.getString(INDEX_IMAGE_URI);
+            Uri imageUri = Uri.parse(imageUriString);
+            File photoFile = new File(imageUri.getPath());
+
+            if (photoFile.exists()) {
+                photos.add(photoFile);
+            }
+        }
+
+        cursor.close();
+
+        return photos;
     }
 
     private NotificationCompat.Builder getNotificationBuilder() {
