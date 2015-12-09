@@ -20,7 +20,7 @@ public class TutorialActivity extends AppIntro {
         // TODO: Extract strings for translation
         addSlide(AppIntroFragment.newInstance(
                 "Welcome",
-                "Here is a message from the researcher (video coming soon!)",
+                "With the help of this study I would like to learn about your experiences using public transport and walking in Helsinki",
                 R.drawable.ic_video,
                 MATERIAL_INDIGO
         ));
@@ -32,8 +32,14 @@ public class TutorialActivity extends AppIntro {
         ));
         addSlide(AppIntroFragment.newInstance(
                 "Notes",
-                "Use the Notes tab to record information about your trip to Helsinki",
+                "Use the Notes tab to record information while using public transport and walking. Please pay attention to constraints (problems) and facilitators (good things)",
                 R.drawable.ic_city,
+                MATERIAL_INDIGO
+        ));
+        addSlide(AppIntroFragment.newInstance(
+                "Notes",
+                "Please add a note and take a picture when you experience a constraint or facilitator",
+                R.drawable.ic_binoculars,
                 MATERIAL_INDIGO
         ));
         addSlide(AppIntroFragment.newInstance(
