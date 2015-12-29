@@ -177,6 +177,7 @@ public class JsonGenerator {
         final int INDEX_TIME = cursor.getColumnIndex(NoteEntry.COLUMN_TIME);
         final int INDEX_TEXT = cursor.getColumnIndex(NoteEntry.COLUMN_TEXT);
         final int INDEX_IMAGE_URI = cursor.getColumnIndex(NoteEntry.COLUMN_IMAGE_URI);
+        final int INDEX_ATTITUDE = cursor.getColumnIndex(NoteEntry.COLUMN_ATTITUDE);
 
         JSONArray jsonArray = new JSONArray();
 
@@ -187,11 +188,13 @@ public class JsonGenerator {
             long time = cursor.getLong(INDEX_TIME);
             String text = cursor.getString(INDEX_TEXT);
             String imageUri = cursor.getString(INDEX_IMAGE_URI);
+            int attitude = cursor.getInt(INDEX_ATTITUDE);
 
             jsonObject.put(NoteEntry._ID, id);
             jsonObject.put(NoteEntry.COLUMN_TIME, time);
             jsonObject.put(NoteEntry.COLUMN_TEXT, text);
             jsonObject.put(NoteEntry.COLUMN_IMAGE_URI, imageUri);
+            jsonObject.put(NoteEntry.COLUMN_ATTITUDE, attitude);
 
             jsonArray.put(jsonObject);
         }

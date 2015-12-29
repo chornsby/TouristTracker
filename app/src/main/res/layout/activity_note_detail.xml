@@ -44,6 +44,31 @@
                 android:layout_margin="@dimen/spacer_margin"
                 android:gravity="start" />
 
+            <RadioGroup
+                android:id="@+id/radio_group"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/positive"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_hand_thumbsup"
+                    android:drawableEnd="@drawable/ic_hand_thumbsup" />
+
+                <RadioButton
+                    android:id="@+id/negative"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_hand_thumbsdown"
+                    android:drawableEnd="@drawable/ic_hand_thumbsdown" />
+
+            </RadioGroup>
+
             <EditText
                 android:id="@+id/edit_note"
                 android:layout_width="match_parent"

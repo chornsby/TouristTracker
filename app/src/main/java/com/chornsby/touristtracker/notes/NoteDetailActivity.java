@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.chornsby.touristtracker.R;
@@ -44,6 +45,8 @@ public class NoteDetailActivity extends AppCompatActivity {
     EditText mEditText;
     FloatingActionButton mAddPhoto;
     ImageView mImageView;
+    RadioButton mPositiveButton;
+    RadioButton mNegativeButton;
 
     Uri mCurrentPhotoUri;
     Uri mSelectedPhotoUri;
@@ -87,6 +90,11 @@ public class NoteDetailActivity extends AppCompatActivity {
 
         mEditText = (EditText) findViewById(R.id.edit_note);
         mEditText.append(mNote.note);
+
+        mPositiveButton = (RadioButton) findViewById(R.id.positive);
+        mNegativeButton = (RadioButton) findViewById(R.id.negative);
+
+        setAttitudeValue(mNote);
 
         CharSequence relativeDateTime;
 
@@ -334,12 +342,32 @@ public class NoteDetailActivity extends AppCompatActivity {
             mNote.imageUri = mSelectedPhotoUri.toString();
         }
 
+        mNote.attitude = getAttitudeValue();
+
         getContentResolver().update(
                 TrackerContract.NoteEntry.CONTENT_URI,
                 mNote.asContentValues(),
                 TrackerContract.NoteEntry._ID + "=?",
                 new String[] {((Long) mNote.id).toString()}
         );
+    }
+
+    private int getAttitudeValue() {
+        if (mPositiveButton.isChecked()) {
+            return 1;
+        } else if (mNegativeButton.isChecked()) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    private void setAttitudeValue(Note note) {
+        if (note.attitude == 1) {
+            mPositiveButton.setChecked(true);
+        } else if (note.attitude == -1) {
+            mNegativeButton.setChecked(true);
+        }
     }
 
     @Override

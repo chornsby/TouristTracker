@@ -10,7 +10,7 @@ import com.chornsby.touristtracker.data.TrackerContract.NoteEntry;
 
 public class TrackerDbHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     static final String DATABASE_NAME = "tracker.db";
 
@@ -41,7 +41,8 @@ public class TrackerDbHelper extends SQLiteOpenHelper {
                 NoteEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 NoteEntry.COLUMN_TIME + " INTEGER NOT NULL, " +
                 NoteEntry.COLUMN_TEXT + " TEXT, " +
-                NoteEntry.COLUMN_IMAGE_URI + " TEXT);";
+                NoteEntry.COLUMN_IMAGE_URI + " TEXT," +
+                NoteEntry.COLUMN_ATTITUDE + " INTEGER NOT NULL);";
 
         db.execSQL(SQL_CREATE_ACTIVITY_TABLE);
         db.execSQL(SQL_CREATE_LOCATION_TABLE);
