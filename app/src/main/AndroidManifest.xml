@@ -66,6 +66,10 @@
             android:enabled="true"
             android:exported="false" >
         </receiver>
+        <receiver
+            android:name=".reminders.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false" />
 
         <activity
             android:name=".submit.SubmitActivity"

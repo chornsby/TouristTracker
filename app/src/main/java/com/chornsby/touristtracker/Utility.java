@@ -4,6 +4,8 @@ package com.chornsby.touristtracker;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +22,7 @@ import android.util.Log;
 
 import com.chornsby.touristtracker.data.TrackerContract.ActivityEntry;
 import com.chornsby.touristtracker.data.TrackerContract.LocationEntry;
+import com.chornsby.touristtracker.reminders.AlarmReceiver;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.location.LocationRequest;
@@ -31,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
@@ -226,5 +230,44 @@ public class Utility {
         }
 
         return researchNumber;
+    }
+
+    public static void setNotifications(Context context, SharedPreferences sharedPreferences) {
+        // Do not set alarms again if they have already been set
+        if (sharedPreferences.getBoolean(context.getString(R.string.pref_notifications_set), false)) {
+            return;
+        }
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        calendar.add(Calendar.DATE, 1);
+
+        alarmManager.set(
+                AlarmManager.RTC,
+                calendar.getTimeInMillis(),
+                PendingIntent.getBroadcast(context, Constants.FIRST_NOTIFICATION_ID, alarmIntent, 0)
+        );
+
+        Log.d(LOG_TAG, "First notification set for: " + calendar.getTimeInMillis());
+
+        calendar.add(Calendar.DATE, 1);
+
+        alarmManager.set(
+                AlarmManager.RTC,
+                calendar.getTimeInMillis(),
+                PendingIntent.getBroadcast(context, Constants.SECOND_NOTIFICATION_ID, alarmIntent, 0)
+        );
+
+        Log.d(LOG_TAG, "Second notification set for: " + calendar.getTimeInMillis());
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getString(R.string.pref_notifications_set), true);
+        editor.apply();
     }
 }

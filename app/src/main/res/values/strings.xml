@@ -9,6 +9,7 @@
     <string name="pref_uploading_data" translatable="false">pref_uploading_data</string>
     <string name="pref_applicant_id" translatable="false">pref_applicant_id</string>
     <string name="pref_tutorial_finished" translatable="false">pref_tutorial_finished</string>
+    <string name="pref_notifications_set">pref_notifications_set</string>
 
     <!-- Permission details -->
     <string name="permission_track_location_label">tracked location</string>
@@ -36,6 +37,7 @@
     <string name="notif_tracking_stopped">Location tracking stopped</string>
     <string name="notif_copied_to_clipboard">Research number copied</string>
     <string name="notif_email_invalid">Email address invalid</string>
+    <string name="notif_please_use_the_app">Please remember to use the app today!</string>
 
     <!-- Actions -->
     <string name="action_stop_tracking">Stop tracking</string>

@@ -82,6 +82,8 @@ public class MainActivity extends ActionBarActivity implements SharedPreferences
         actionBar.addTab(actionBar.newTab()
                 .setText(getString(R.string.tab_label_survey).toUpperCase())
                 .setTabListener(tabListener));
+
+        Utility.setNotifications(this, preferences);
     }
 
     @Override
