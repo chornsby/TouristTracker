@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
@@ -20,7 +19,7 @@ public class TutorialActivity extends AppIntro {
         // TODO: Extract strings for translation
         addSlide(AppIntroFragment.newInstance(
                 "Welcome",
-                "With the help of this study I would like to learn about your experiences using public transport and walking in Helsinki",
+                "In this study I would like to learn about your experience travelling in Helsinki, especially using public transport and walking",
                 R.drawable.ic_video,
                 MATERIAL_INDIGO
         ));
@@ -32,14 +31,14 @@ public class TutorialActivity extends AppIntro {
         ));
         addSlide(AppIntroFragment.newInstance(
                 "Notes",
-                "Use the Notes tab to record information while using public transport and walking. Please pay attention to constraints (problems) and facilitators (good things)",
-                R.drawable.ic_city,
+                "Use the Notes section to record information about problems and positive things you face while moving in the city. Please pay special attention to walkability and the use of public transport.",
+                R.drawable.ic_pencil,
                 MATERIAL_INDIGO
         ));
         addSlide(AppIntroFragment.newInstance(
                 "Notes",
-                "Please add a note and take a picture when you experience a constraint or facilitator",
-                R.drawable.ic_binoculars,
+                "Please add a comment and take a picture when you experience a problem or positive thing while in Helsinki.",
+                R.drawable.ic_camera,
                 MATERIAL_INDIGO
         ));
         addSlide(AppIntroFragment.newInstance(

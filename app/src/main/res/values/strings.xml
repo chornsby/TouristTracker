@@ -19,7 +19,7 @@
     </string>
 
     <!-- Titles -->
-    <string name="app_name">Tourist Tracker</string>
+    <string name="app_name">Tourist Experience Tracker</string>
     <string name="title_activity_submit">Submit</string>
     <string name="title_activity_note_detail">Edit note</string>
 
@@ -57,12 +57,8 @@
     <string name="note_saved">Note saved</string>
     <string name="no_notes_available">You haven\'t added any notes yet</string>
     <string name="no_notes_instructions_1">
-        Please add a note and take a picture when you experience constraints or facilitators to
-        tourism while in Helsinki.
-    </string>
-    <string name="no_notes_instructions_2">
-        Add C if it is a constraint and F if it is a facilitator, P if you are using public transport
-        and W if you are walking and explanation about the issue.
+        Please add a note and take a picture when you experience a problem or positive thing while
+        in Helsinki.
     </string>
 
     <!-- Submit -->
